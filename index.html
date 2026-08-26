@@ -107,10 +107,11 @@
     </div>
     
     <div class="flex items-center gap-2">
-      <!-- Google Sheets Config Button -->
-      <button id="btnConfigModal" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 rounded-lg flex items-center gap-1.5 transition">
-        <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-        <span>Conexión Google Sheets</span>
+      <!-- Admin / DB View Button -->
+      <button id="btnAdminModal" class="px-3.5 py-1.5 text-xs font-semibold text-slate-200 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 rounded-xl flex items-center gap-2 transition shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <i data-lucide="database" class="w-3.5 h-3.5 text-sky-400"></i>
+        <span>Historial & D1</span>
       </button>
     </div>
   </header>
@@ -186,7 +187,6 @@
         </div>
 
         <input type="hidden" id="designerName" value="" />
-        <!-- Auto captured hidden date -->
         <input type="hidden" id="weekDate" value="" />
       </div>
 
@@ -420,7 +420,7 @@
           </button>
           <button type="button" id="btnSubmit" onclick="submitWeeklyPulse()" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 hover:opacity-90 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-2 transition active:scale-95">
             <i data-lucide="send" class="w-4 h-4"></i>
-            <span id="submitBtnText">Enviar a Google Sheets</span>
+            <span id="submitBtnText">Enviar Check-in</span>
           </button>
         </div>
       </div>
@@ -430,14 +430,18 @@
         <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-emerald-500/30">
           <i data-lucide="check" class="w-10 h-10 text-white stroke-[3]"></i>
         </div>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Guardado en Google Sheets! 🎉</h2>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Guardado con Éxito! 🎉</h2>
         <p class="text-sm text-slate-300 max-w-md mx-auto mb-6 leading-relaxed">
-          Tu reporte semanal quedó registrado en la hoja de cálculo central. ¡Gracias por visibilizar tu esfuerzo y buen fin de semana! 🏖️
+          Tu reporte semanal quedó registrado en la base de datos central de Cloudflare D1. ¡Gracias por visibilizar tu esfuerzo y que tengas un excelente fin de semana! 🏖️
         </p>
 
         <div class="flex flex-col sm:flex-row justify-center gap-3">
           <button type="button" onclick="resetForm()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
             Llenar otro registro
+          </button>
+          <button type="button" onclick="openAdminModal()" class="px-5 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-semibold border border-sky-500/30 transition flex items-center justify-center gap-1.5">
+            <i data-lucide="database" class="w-3.5 h-3.5"></i>
+            <span>Ver Base de Datos D1</span>
           </button>
         </div>
       </div>
@@ -445,45 +449,78 @@
     </div>
   </main>
 
-  <!-- MODAL: CONFIGURACIÓN GOOGLE SHEETS WEBHOOK -->
-  <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-panel w-full max-w-xl rounded-3xl p-6 md:p-8 flex flex-col shadow-2xl border border-slate-700">
+  <!-- MODAL: HISTORIAL & EXPORTADOR CLOUDFLARE D1 -->
+  <div id="adminModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-3xl p-6 md:p-8 flex flex-col shadow-2xl border border-slate-700 overflow-hidden">
       
       <div class="flex items-center justify-between pb-4 border-b border-slate-800">
         <div class="flex items-center gap-3">
           <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-            <i data-lucide="table" class="w-5 h-5"></i>
+            <i data-lucide="database" class="w-5 h-5"></i>
           </div>
           <div>
-            <h3 class="text-base font-bold text-white">Conexión con Google Sheets</h3>
-            <p class="text-xs text-slate-400">Guarda las respuestas 24/7 en tu hoja de cálculo.</p>
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-bold text-white">Base de Datos Cloudflare D1</h3>
+              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Conectada (pulse_db)
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">Respuestas del equipo almacenadas en la nube 24/7.</p>
           </div>
         </div>
-        <button onclick="closeConfigModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+        <button onclick="closeAdminModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="py-5 space-y-4">
-        <div>
-          <label class="block text-xs font-bold text-slate-300 mb-1.5">URL de tu Webhook de Google Apps Script</label>
-          <input type="text" id="webhookUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="glass-input w-full px-4 py-3 rounded-xl text-xs text-white focus:outline-none" />
-          <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
-            Pega aquí la URL generada en tu Google Sheet (siguiendo el archivo <code class="text-sky-300">GOOGLE_SHEET_INTEGRATION.md</code>). Una vez guardada, la app enviará todas las respuestas directamente ahí.
-          </p>
-        </div>
+      <!-- Action Buttons -->
+      <div class="py-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80">
+        <button onclick="fetchD1Records()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition">
+          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+          <span>Actualizar Datos</span>
+        </button>
 
-        <div class="p-4 rounded-xl bg-sky-950/30 border border-sky-500/20 text-xs text-sky-200 flex items-start gap-3">
-          <i data-lucide="info" class="w-4 h-4 mt-0.5 text-sky-400 shrink-0"></i>
-          <div>
-            <strong>Cero servidores:</strong> No necesitas tener tu computadora encendida ni n8n corriendo. El script de Google procesa y agrega la fila inmediatamente.
-          </div>
+        <div class="flex items-center gap-2">
+          <a href="/api/export-csv" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition">
+            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+            <span>Descargar CSV (Excel)</span>
+          </a>
+          <button onclick="generateClaudePromptFromD1()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition">
+            <i data-lucide="bot" class="w-4 h-4"></i>
+            <span>Copiar Prompt para Claude</span>
+          </button>
         </div>
       </div>
 
-      <div class="pt-4 flex justify-end gap-2 border-t border-slate-800">
-        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition">Cancelar</button>
-        <button onclick="saveWebhookConfig()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">Guardar Conexión</button>
+      <!-- Tabla de Datos -->
+      <div class="flex-1 overflow-y-auto my-4 rounded-xl border border-slate-800 bg-slate-950/50">
+        <table class="w-full text-left text-xs text-slate-300">
+          <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 sticky top-0 border-b border-slate-800">
+            <tr>
+              <th class="p-3">Fecha</th>
+              <th class="p-3">Diseñador</th>
+              <th class="p-3">Proyecto Clave</th>
+              <th class="p-3">Horas Proy.</th>
+              <th class="p-3">Horas Rutina</th>
+              <th class="p-3">Incidencia</th>
+            </tr>
+          </thead>
+          <tbody id="dataTableBody" class="divide-y divide-slate-800/60">
+            <!-- Dynamic rows -->
+          </tbody>
+        </table>
+        <div id="loadingMsg" class="p-8 text-center text-slate-400 text-xs">
+          Cargando registros desde Cloudflare D1...
+        </div>
+        <div id="noDataMsg" class="p-8 text-center text-slate-500 text-xs hidden">
+          No hay registros en la base de datos todavía. Completa el primer check-in para verlo aquí.
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="pt-3 flex justify-between items-center text-xs text-slate-500 border-t border-slate-800">
+        <span id="totalRecordsLabel">0 registros en Cloudflare D1</span>
+        <span class="text-[11px] text-slate-400">Endpoint: <code class="text-sky-400 font-mono">/api/responses</code></span>
       </div>
 
     </div>
@@ -493,7 +530,7 @@
   <script>
     lucide.createIcons();
 
-    // Auto-compute current week Friday / current date
+    // Auto-compute current date
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
     document.getElementById('weekDate').value = formattedDate;
@@ -508,11 +545,7 @@
       "Innovación & Cierre"
     ];
 
-    const WEBHOOK_KEY = "weekly_pulse_google_sheet_url";
-    
-    // Load saved webhook URL
-    const savedWebhook = localStorage.getItem(WEBHOOK_KEY) || "";
-    document.getElementById('webhookUrlInput').value = savedWebhook;
+    let cachedD1Data = [];
 
     function selectDesigner(card, name) {
       const allCards = document.querySelectorAll('.designer-card');
@@ -520,7 +553,6 @@
       card.classList.add('active');
       document.getElementById('designerName').value = name;
       
-      // Auto advance to next step smoothly
       setTimeout(() => {
         nextStep(1);
       }, 200);
@@ -535,20 +567,17 @@
         }
       }
 
-      // Hide all steps
       for (let i = 0; i <= 5; i++) {
         const el = document.getElementById(`step-${i}`);
         if (el) el.classList.add('hidden');
       }
 
-      // Show target step
       const target = document.getElementById(`step-${stepIndex}`);
       if (target) {
         target.classList.remove('hidden');
         currentStep = stepIndex;
       }
 
-      // Update progress bar
       if (stepIndex <= totalSteps) {
         document.getElementById('progressContainer').classList.remove('hidden');
         document.getElementById('stepLabel').innerText = `Paso ${stepIndex + 1} de ${totalSteps + 1}`;
@@ -559,7 +588,6 @@
         document.getElementById('progressContainer').classList.add('hidden');
       }
 
-      // Update summary fields in step 4
       if (stepIndex === 4) {
         document.getElementById('sumDesigner').innerText = document.getElementById('designerName').value || "Anónimo";
         document.getElementById('sumProject').innerText = document.getElementById('starProjectName').value || "Operación regular";
@@ -609,7 +637,7 @@
       const submitBtn = document.getElementById('btnSubmit');
       const submitBtnText = document.getElementById('submitBtnText');
       submitBtn.disabled = true;
-      submitBtnText.innerText = "Enviando a Google Sheets...";
+      submitBtnText.innerText = "Guardando en Cloudflare D1...";
 
       const record = {
         id: 'rec_' + Date.now(),
@@ -633,33 +661,34 @@
         innovationNotes: document.getElementById('innovationNotes').value.trim() || "N/A"
       };
 
-      // 1. Send to Google Sheets Webhook
-      const webhookUrl = localStorage.getItem(WEBHOOK_KEY);
-      if (webhookUrl) {
-        try {
-          await fetch(webhookUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(record),
-            mode: 'no-cors' // Compatible with Google Apps Script
-          });
-        } catch (e) {
-          console.warn('Google Sheets dispatch note:', e);
-        }
-      } else {
-        console.info('No webhook URL configured. Record stored in memory.');
+      // 1. Send to Cloudflare D1 via Pages Function
+      try {
+        await fetch('/api/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(record)
+        });
+      } catch (e) {
+        console.warn('D1 dispatch note:', e);
       }
 
-      // 2. Trigger Confetti
+      // 2. Fallback in LocalStorage
+      try {
+        const local = JSON.parse(localStorage.getItem("weekly_pulse_backup") || "[]");
+        local.unshift(record);
+        localStorage.setItem("weekly_pulse_backup", JSON.stringify(local));
+      } catch(e) {}
+
+      // 3. Trigger Confetti
       confetti({
         particleCount: 90,
         spread: 75,
         origin: { y: 0.6 }
       });
 
-      // 3. Move to Success Screen
+      // 4. Move to Success Screen
       submitBtn.disabled = false;
-      submitBtnText.innerText = "Enviar a Google Sheets";
+      submitBtnText.innerText = "Enviar Check-in";
       nextStep(5);
     }
 
@@ -676,23 +705,103 @@
       nextStep(0);
     }
 
-    // Modal Handlers
-    function openConfigModal() {
-      document.getElementById('configModal').classList.remove('hidden');
-    }
-    function closeConfigModal() {
-      document.getElementById('configModal').classList.add('hidden');
-    }
-    function saveWebhookConfig() {
-      const url = document.getElementById('webhookUrlInput').value.trim();
-      localStorage.setItem(WEBHOOK_KEY, url);
-      alert("¡URL de Google Sheets guardada exitosamente!");
-      closeConfigModal();
+    // Modal & D1 Fetch Logic
+    function openAdminModal() {
+      document.getElementById('adminModal').classList.remove('hidden');
+      fetchD1Records();
     }
 
-    document.getElementById('btnConfigModal').addEventListener('click', openConfigModal);
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+    }
+
+    async function fetchD1Records() {
+      const tbody = document.getElementById('dataTableBody');
+      const loading = document.getElementById('loadingMsg');
+      const noData = document.getElementById('noDataMsg');
+      const totalLbl = document.getElementById('totalRecordsLabel');
+
+      tbody.innerHTML = "";
+      loading.classList.remove('hidden');
+      noData.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/responses');
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        cachedD1Data = json.data || [];
+      } catch (err) {
+        // Fallback to local backup
+        cachedD1Data = JSON.parse(localStorage.getItem("weekly_pulse_backup") || "[]");
+      }
+
+      loading.classList.add('hidden');
+      totalLbl.innerText = `${cachedD1Data.length} registros en Cloudflare D1`;
+
+      if (cachedD1Data.length === 0) {
+        noData.classList.remove('hidden');
+        return;
+      }
+
+      cachedD1Data.forEach(r => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/50 transition";
+        const hasInc = (r.has_incident || r.hasIncident) === "Sí";
+        const cost = r.cost_impact || r.costImpact || "No";
+        tr.innerHTML = `
+          <td class="p-3 font-mono text-slate-400 text-[11px]">${r.week_date || r.weekDate || (r.submitted_at || r.submittedAt || '').slice(0,10)}</td>
+          <td class="p-3 font-semibold text-white">${r.designer}</td>
+          <td class="p-3 text-sky-300 font-medium">${r.star_project || r.starProject}</td>
+          <td class="p-3">${r.star_time || r.starTime}</td>
+          <td class="p-3">${r.routine_time || r.routineTime}</td>
+          <td class="p-3">
+            ${hasInc 
+              ? `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">⚠️ ${cost}</span>` 
+              : `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Limpio</span>`
+            }
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      lucide.createIcons();
+    }
+
+    function generateClaudePromptFromD1() {
+      if (!cachedD1Data || cachedD1Data.length === 0) {
+        alert("No hay registros en la base de datos para generar el reporte.");
+        return;
+      }
+
+      const prompt = `Hola Claude. Actúa como Director Creativo / Gerente de Diseño. A continuación te proporciono los registros semanales de productividad de mi equipo de diseño (base 48 horas semanales, con meta del 80% de productividad efectiva).
+
+Con base en esta información, redacta el **Reporte Ejecutivo Mensual de Productividad** para presentar a la Gerencia General en el último briefing del mes.
+
+Requisitos del Reporte:
+1. **Resumen Ejecutivo General:** Visión panorámica del mes, horas totales invertidas, balance general entre Proyectos de Valor vs. Operación de Rutina (letreros, adaptaciones).
+2. **Desglose por Diseñador:** 
+   - Proyectos de alto impacto y valor aportado.
+   - Distribución estimada de tiempo (% proyectos vs % rutina).
+   - Logros o innovaciones destacadas.
+3. **Análisis de Calidad, Retrabajos y Costos:**
+   - Resumen de incidencias (causas principales: briefs tardíos, proveedores, etc.).
+   - Impacto en costos adicionales o mermas (si aplica).
+   - Recomendaciones de mejora operativa para Gerencia.
+4. **Tono:** Ejecutivo, conciso, orientado a resultados y métricas de negocio (no un portafolio gráfico).
+
+--- DATA CRUDA DE CLOUDFLARE D1 (${cachedD1Data.length} REGISTROS) ---
+${JSON.stringify(cachedD1Data, null, 2)}
+`;
+
+      navigator.clipboard.writeText(prompt).then(() => {
+        alert("¡Prompt copiado al portapapeles! 📋✨\n\nSolo pégalo en Claude para que te genere el reporte ejecutivo completo.");
+      }).catch(err => {
+        console.error("Error al copiar:", err);
+      });
+    }
+
+    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeConfigModal();
+      if (e.key === 'Escape') closeAdminModal();
     });
   </script>
 </body>
