@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weekly Pulse | Check-in Creativo Semanal</title>
+  <!-- Google Fonts & Tailwind CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons & Canvas Confetti -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              400: '#38bdf8',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              accent: '#6366f1',
+              gold: '#f59e0b'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 1) 90%);
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    .glass-panel {
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+    .glass-input {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.25s ease;
+    }
+    .glass-input:focus {
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+      background: rgba(15, 23, 42, 0.85);
+    }
+    .step-card {
+      transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .option-pill {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .option-pill:hover {
+      transform: translateY(-2px);
+      border-color: rgba(56, 189, 248, 0.5);
+    }
+    .option-pill.active {
+      border-color: #38bdf8;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+    }
+    .designer-card {
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .designer-card:hover {
+      transform: translateY(-2px);
+      border-color: #38bdf8;
+    }
+    .designer-card.active {
+      border-color: #38bdf8;
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4 md:p-8 selection:bg-sky-500 selection:text-white font-sans antialiased">
+
+  <!-- TOP BAR -->
+  <header class="w-full max-w-2xl flex items-center justify-between py-4 mb-4">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+      </div>
+      <div>
+        <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+          Weekly Pulse
+          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">Diseño</span>
+        </h1>
+        <p class="text-xs text-slate-400">Check-in de Impacto & Productividad</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- Google Sheets Config Button -->
+      <button id="btnConfigModal" class="px-3 py-1.5 text-xs font-medium text-slate-300 bg-slate-800/80 hover:bg-slate-700 border border-slate-700 rounded-lg flex items-center gap-1.5 transition">
+        <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+        <span>Conexión Google Sheets</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SLIDER CARD CONTAINER -->
+  <main class="w-full max-w-2xl">
+    
+    <!-- Progress Indicator -->
+    <div id="progressContainer" class="mb-5">
+      <div class="flex justify-between items-center text-xs font-medium text-slate-400 mb-2">
+        <span id="stepLabel">Paso 1 de 5</span>
+        <span id="stepTitleHint" class="text-sky-400 font-semibold">Identificación</span>
+      </div>
+      <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+        <div id="progressBar" class="h-full bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-400 w-1/5 transition-all duration-300 ease-out"></div>
+      </div>
+    </div>
+
+    <!-- FORM WRAPPER -->
+    <div class="glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
+
+      <!-- STEP 0: Selección de Diseñador -->
+      <div class="step-card" id="step-0">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-3">
+          <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Check-in Semanal
+        </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Hola equipo creativo! 👋</h2>
+        <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+          Selecciona tu nombre para comenzar tu resumen semanal de <strong class="text-sky-300 font-medium">3 minutos</strong>.
+        </p>
+
+        <div class="space-y-3" id="designerGroup">
+          
+          <button type="button" onclick="selectDesigner(this, 'Homero Hernandez Morales')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
+                HH
+              </div>
+              <div>
+                <div class="font-bold text-sm text-white group-hover:text-sky-300 transition">Homero Hernandez Morales</div>
+                <div class="text-xs text-slate-400">Equipo de Diseño</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-sky-400 transition"></i>
+          </button>
+
+          <button type="button" onclick="selectDesigner(this, 'Maria Esther Mendoza Franco')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm border border-purple-500/30">
+                ME
+              </div>
+              <div>
+                <div class="font-bold text-sm text-white group-hover:text-purple-300 transition">Maria Esther Mendoza Franco</div>
+                <div class="text-xs text-slate-400">Equipo de Diseño</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-purple-400 transition"></i>
+          </button>
+
+          <button type="button" onclick="selectDesigner(this, 'Michelle Pous Alarcon')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
+            <div class="flex items-center gap-3.5">
+              <div class="w-11 h-11 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm border border-teal-500/30">
+                MP
+              </div>
+              <div>
+                <div class="font-bold text-sm text-white group-hover:text-teal-300 transition">Michelle Pous Alarcon</div>
+                <div class="text-xs text-slate-400">Equipo de Diseño</div>
+              </div>
+            </div>
+            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-teal-400 transition"></i>
+          </button>
+
+        </div>
+
+        <input type="hidden" id="designerName" value="" />
+        <!-- Auto captured hidden date -->
+        <input type="hidden" id="weekDate" value="" />
+      </div>
+
+      <!-- STEP 1: Proyecto Estrella (Valor e Impacto) -->
+      <div class="step-card hidden" id="step-1">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
+          <i data-lucide="star" class="w-3.5 h-3.5"></i> Sección 1 de 4
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">🌟 Tu Proyecto Estrella de la Semana</h2>
+        <p class="text-xs md:text-sm text-slate-300 mb-5">
+          El proyecto más relevante, retador o donde realmente aportaste una solución o valor especial.
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Nombre del Proyecto o Solicitud Principal</label>
+            <input type="text" id="starProjectName" placeholder="Ej. Campaña Navidad 2026, Menús Restaurante Jade, Rebranding SPA..." class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">¿Qué aportaste de nuevo o diferente?</label>
+            <textarea id="starProjectValue" rows="2" placeholder="Ej. Se propuso nuevo layout más limpio que redujo el tiempo de lectura, se creó plantilla escalable..." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+              Tiempo invertido en este proyecto <span class="text-slate-400 font-normal">(Jornada: 48h)</span>
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="starTimeGroup">
+              <button type="button" data-val="< 8 hrs (Puntual)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Puntual (&lt; 8 hrs)</div>
+                <div class="text-[11px] text-slate-400">~1 día o apoyo rápido</div>
+              </button>
+              <button type="button" data-val="8 a 18 hrs (Parcial)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Parcial (8 a 18 hrs)</div>
+                <div class="text-[11px] text-slate-400">~1.5 a 2 días de trabajo</div>
+              </button>
+              <button type="button" data-val="18 a 30 hrs (Principal)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left active">
+                <div class="font-semibold text-xs text-white">Principal (18 a 30 hrs)</div>
+                <div class="text-[11px] text-slate-400">~2.5 a 3.5 días dedicados</div>
+              </button>
+              <button type="button" data-val="+30 hrs (Full Focus)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Full Focus (+30 hrs)</div>
+                <div class="text-[11px] text-slate-400">Prácticamente toda la semana</div>
+              </button>
+            </div>
+            <input type="hidden" id="starTime" value="18 a 30 hrs (Principal)" />
+          </div>
+        </div>
+
+        <div class="mt-7 flex justify-between items-center">
+          <button type="button" onclick="nextStep(0)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+          </button>
+          <button type="button" onclick="nextStep(2)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
+            <span>Siguiente</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Operación y Rutina -->
+      <div class="step-card hidden" id="step-2">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-3">
+          <i data-lucide="layers" class="w-3.5 h-3.5"></i> Sección 2 de 4
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">⚙️ Operación del Día a Día</h2>
+        <p class="text-xs md:text-sm text-slate-300 mb-5">
+          Para registrar el tiempo invertido en solicitudes rutinarias (letreros, ajustes menores, adaptaciones de formatos).
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">1 o 2 ejemplos representativos de lo que hiciste</label>
+            <textarea id="routineTasks" rows="2" placeholder="Ej. 1. Adaptación de letreros para buffet. 2. Cambios de logos en uniformes." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
+              ¿Cuánto tiempo se te fue en esta rutina?
+            </label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="routineTimeGroup">
+              <button type="button" data-val="Baja (< 10 hrs | < 25%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Baja (&lt; 10 hrs)</div>
+                <div class="text-[11px] text-slate-400">&lt; 25% del tiempo semanal</div>
+              </button>
+              <button type="button" data-val="Balanceada (10 a 20 hrs | 25%-50%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left active">
+                <div class="font-semibold text-xs text-white">Balanceada (10 a 20 hrs)</div>
+                <div class="text-[11px] text-slate-400">25% - 50% de la jornada</div>
+              </button>
+              <button type="button" data-val="Alta Demanda (20 a 30 hrs | 50%-75%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Alta Demanda (20 a 30 hrs)</div>
+                <div class="text-[11px] text-slate-400">50% - 75% (mucha maquila)</div>
+              </button>
+              <button type="button" data-val="Bomberazos (+30 hrs | > 75%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
+                <div class="font-semibold text-xs text-white">Bomberazos (+30 hrs)</div>
+                <div class="text-[11px] text-slate-400">&gt; 75% apagando fuegos</div>
+              </button>
+            </div>
+            <input type="hidden" id="routineTime" value="Balanceada (10 a 20 hrs | 25%-50%)" />
+          </div>
+        </div>
+
+        <div class="mt-7 flex justify-between items-center">
+          <button type="button" onclick="nextStep(1)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+          </button>
+          <button type="button" onclick="nextStep(3)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
+            <span>Siguiente</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Incidencias & Retrabajos -->
+      <div class="step-card hidden" id="step-3">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-3">
+          <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Sección 3 de 4
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">⚠️ Fricciones, Retrabajos & Costos</h2>
+        <p class="text-xs md:text-sm text-slate-300 mb-5">
+          Identifiquemos cuellos de botella (cambios de brief extemporáneos, mermas o fallas de proveedor) para solicitar mejoras en Gerencia.
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">¿Se presentó algún retrabajo o error esta semana?</label>
+            <div class="grid grid-cols-2 gap-3" id="incidentToggle">
+              <button type="button" id="btnIncidentNo" onclick="setIncidentMode(false)" class="option-pill p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 text-center active">
+                <span class="text-base block mb-1">🚀</span>
+                <span class="font-bold text-xs text-white">Todo Fluyó Limpio</span>
+                <span class="text-[10px] text-slate-400 block">Sin retrabajos</span>
+              </button>
+              <button type="button" id="btnIncidentYes" onclick="setIncidentMode(true)" class="option-pill p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 text-center">
+                <span class="text-base block mb-1">⚠️</span>
+                <span class="font-bold text-xs text-white">Hubo Fricción / Error</span>
+                <span class="text-[10px] text-slate-400 block">Requirió retrabajo</span>
+              </button>
+            </div>
+            <input type="hidden" id="hasIncident" value="No" />
+          </div>
+
+          <!-- Bloque condicional si HUBO incidencia -->
+          <div id="incidentDetailsBlock" class="hidden p-4 rounded-2xl bg-rose-950/20 border border-rose-500/20 space-y-3.5 transition-all">
+            <div>
+              <label class="block text-xs font-bold text-rose-300 mb-1">Causa Principal del Retrabajo</label>
+              <select id="incidentCause" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-white text-xs focus:outline-none">
+                <option value="Cambio de solicitud/brief extemporáneo">Cambio de solicitud/brief extemporáneo por cliente interno</option>
+                <option value="Información o medidas incorrectas de origen">Información o medidas incorrectas en el brief inicial</option>
+                <option value="Falla o retraso en proveedor de impresión/producción">Falla o retraso en proveedor de impresión/producción</option>
+                <option value="Error de diseño / arte interno">Error de diseño / arte interno</option>
+                <option value="Otro motivo">Otro motivo</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-rose-300 mb-1">Breve descripción de lo sucedido</label>
+              <input type="text" id="incidentDescription" placeholder="Ej. Se mandó a imprimir letrero pero solicitaron cambiar precios al día siguiente..." class="glass-input w-full px-3.5 py-2.5 rounded-xl text-white placeholder-slate-500 text-xs focus:outline-none" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-rose-300 mb-1">¿Generó costo extra de dinero o merma de material?</label>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="costImpactGroup">
+                <button type="button" data-val="No (Solo tiempo de diseño)" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white active">
+                  No (Solo tiempo)
+                </button>
+                <button type="button" data-val="Sí (Reimpresión/Proveedor)" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white">
+                  Sí (Reimpresión/Gasto)
+                </button>
+                <button type="button" data-val="Por determinar" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white">
+                  Por determinar
+                </button>
+              </div>
+              <input type="hidden" id="costImpact" value="No (Solo tiempo de diseño)" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-7 flex justify-between items-center">
+          <button type="button" onclick="nextStep(2)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+          </button>
+          <button type="button" onclick="nextStep(4)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
+            <span>Siguiente</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 4: Innovación & Cierre -->
+      <div class="step-card hidden" id="step-4">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
+          <i data-lucide="zap" class="w-3.5 h-3.5"></i> Sección 4 de 4
+        </div>
+        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">💡 Innovación & Aprendizaje</h2>
+        <p class="text-xs md:text-sm text-slate-300 mb-5">
+          ¿Descubriste un truco, atajo, plantilla o usaste IA (Claude, Photoshop AI) que te ahorró tiempo? ¡Presúmelo!
+        </p>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Mejora, técnica o herramienta descubierta <span class="text-slate-400 font-normal">(Opcional)</span></label>
+            <textarea id="innovationNotes" rows="3" placeholder="Ej. Creé una acción en Photoshop para exportar formatos en 1 clic; usé IA para generar fondo del spa ahorrando 2 horas..." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
+          </div>
+
+          <!-- Resumen Rápido Pre-Envío -->
+          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs space-y-2 text-slate-300">
+            <div class="font-bold text-slate-200 uppercase tracking-wider text-[11px] mb-1">Resumen de tu Check-in:</div>
+            <div class="flex justify-between border-b border-slate-800/80 pb-1">
+              <span class="text-slate-400">Diseñador:</span>
+              <span id="sumDesigner" class="font-semibold text-white">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-800/80 pb-1">
+              <span class="text-slate-400">Proyecto Principal:</span>
+              <span id="sumProject" class="font-semibold text-sky-400 truncate max-w-[200px]">-</span>
+            </div>
+            <div class="flex justify-between border-b border-slate-800/80 pb-1">
+              <span class="text-slate-400">Tiempo Proyecto:</span>
+              <span id="sumStarTime" class="font-semibold text-white">-</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-slate-400">Fricciones / Retrabajos:</span>
+              <span id="sumIncident" class="font-semibold text-emerald-400">Limpio 🚀</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-7 flex justify-between items-center">
+          <button type="button" onclick="nextStep(3)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
+          </button>
+          <button type="button" id="btnSubmit" onclick="submitWeeklyPulse()" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 hover:opacity-90 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-2 transition active:scale-95">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span id="submitBtnText">Enviar a Google Sheets</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- STEP 5: Pantalla de Éxito 🎉 -->
+      <div class="step-card hidden text-center py-6" id="step-5">
+        <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-emerald-500/30">
+          <i data-lucide="check" class="w-10 h-10 text-white stroke-[3]"></i>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Guardado en Google Sheets! 🎉</h2>
+        <p class="text-sm text-slate-300 max-w-md mx-auto mb-6 leading-relaxed">
+          Tu reporte semanal quedó registrado en la hoja de cálculo central. ¡Gracias por visibilizar tu esfuerzo y buen fin de semana! 🏖️
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+          <button type="button" onclick="resetForm()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+            Llenar otro registro
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- MODAL: CONFIGURACIÓN GOOGLE SHEETS WEBHOOK -->
+  <div id="configModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+    <div class="glass-panel w-full max-w-xl rounded-3xl p-6 md:p-8 flex flex-col shadow-2xl border border-slate-700">
+      
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+            <i data-lucide="table" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-white">Conexión con Google Sheets</h3>
+            <p class="text-xs text-slate-400">Guarda las respuestas 24/7 en tu hoja de cálculo.</p>
+          </div>
+        </div>
+        <button onclick="closeConfigModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="py-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">URL de tu Webhook de Google Apps Script</label>
+          <input type="text" id="webhookUrlInput" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="glass-input w-full px-4 py-3 rounded-xl text-xs text-white focus:outline-none" />
+          <p class="text-[11px] text-slate-400 mt-1.5 leading-relaxed">
+            Pega aquí la URL generada en tu Google Sheet (siguiendo el archivo <code class="text-sky-300">GOOGLE_SHEET_INTEGRATION.md</code>). Una vez guardada, la app enviará todas las respuestas directamente ahí.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-xl bg-sky-950/30 border border-sky-500/20 text-xs text-sky-200 flex items-start gap-3">
+          <i data-lucide="info" class="w-4 h-4 mt-0.5 text-sky-400 shrink-0"></i>
+          <div>
+            <strong>Cero servidores:</strong> No necesitas tener tu computadora encendida ni n8n corriendo. El script de Google procesa y agrega la fila inmediatamente.
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-4 flex justify-end gap-2 border-t border-slate-800">
+        <button onclick="closeConfigModal()" class="px-4 py-2 rounded-xl text-xs text-slate-400 hover:text-white transition">Cancelar</button>
+        <button onclick="saveWebhookConfig()" class="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition">Guardar Conexión</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    lucide.createIcons();
+
+    // Auto-compute current week Friday / current date
+    const today = new Date();
+    const formattedDate = today.toISOString().split('T')[0];
+    document.getElementById('weekDate').value = formattedDate;
+
+    let currentStep = 0;
+    const totalSteps = 4;
+    const stepTitles = [
+      "Identificación",
+      "Proyecto Estrella",
+      "Operación & Rutina",
+      "Incidencias & Retrabajos",
+      "Innovación & Cierre"
+    ];
+
+    const WEBHOOK_KEY = "weekly_pulse_google_sheet_url";
+    
+    // Load saved webhook URL
+    const savedWebhook = localStorage.getItem(WEBHOOK_KEY) || "";
+    document.getElementById('webhookUrlInput').value = savedWebhook;
+
+    function selectDesigner(card, name) {
+      const allCards = document.querySelectorAll('.designer-card');
+      allCards.forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      document.getElementById('designerName').value = name;
+      
+      // Auto advance to next step smoothly
+      setTimeout(() => {
+        nextStep(1);
+      }, 200);
+    }
+
+    function nextStep(stepIndex) {
+      if (currentStep === 0 && stepIndex === 1) {
+        const name = document.getElementById('designerName').value.trim();
+        if (!name) {
+          alert("Por favor selecciona tu nombre.");
+          return;
+        }
+      }
+
+      // Hide all steps
+      for (let i = 0; i <= 5; i++) {
+        const el = document.getElementById(`step-${i}`);
+        if (el) el.classList.add('hidden');
+      }
+
+      // Show target step
+      const target = document.getElementById(`step-${stepIndex}`);
+      if (target) {
+        target.classList.remove('hidden');
+        currentStep = stepIndex;
+      }
+
+      // Update progress bar
+      if (stepIndex <= totalSteps) {
+        document.getElementById('progressContainer').classList.remove('hidden');
+        document.getElementById('stepLabel').innerText = `Paso ${stepIndex + 1} de ${totalSteps + 1}`;
+        document.getElementById('stepTitleHint').innerText = stepTitles[stepIndex];
+        const pct = ((stepIndex + 1) / (totalSteps + 1)) * 100;
+        document.getElementById('progressBar').style.width = `${pct}%`;
+      } else {
+        document.getElementById('progressContainer').classList.add('hidden');
+      }
+
+      // Update summary fields in step 4
+      if (stepIndex === 4) {
+        document.getElementById('sumDesigner').innerText = document.getElementById('designerName').value || "Anónimo";
+        document.getElementById('sumProject').innerText = document.getElementById('starProjectName').value || "Operación regular";
+        document.getElementById('sumStarTime').innerText = document.getElementById('starTime').value;
+        const hasInc = document.getElementById('hasIncident').value === "Sí";
+        const sumIncEl = document.getElementById('sumIncident');
+        if (hasInc) {
+          sumIncEl.innerText = "Con Incidencia ⚠️";
+          sumIncEl.className = "font-semibold text-rose-400";
+        } else {
+          sumIncEl.innerText = "Limpio 🚀";
+          sumIncEl.className = "font-semibold text-emerald-400";
+        }
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function selectOption(btn, targetInputId) {
+      const parent = btn.parentElement;
+      const buttons = parent.querySelectorAll('.option-pill');
+      buttons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(targetInputId).value = btn.getAttribute('data-val');
+    }
+
+    function setIncidentMode(hasIncident) {
+      const btnNo = document.getElementById('btnIncidentNo');
+      const btnYes = document.getElementById('btnIncidentYes');
+      const details = document.getElementById('incidentDetailsBlock');
+      const input = document.getElementById('hasIncident');
+
+      if (hasIncident) {
+        btnYes.classList.add('active');
+        btnNo.classList.remove('active');
+        details.classList.remove('hidden');
+        input.value = "Sí";
+      } else {
+        btnNo.classList.add('active');
+        btnYes.classList.remove('active');
+        details.classList.add('hidden');
+        input.value = "No";
+      }
+    }
+
+    async function submitWeeklyPulse() {
+      const submitBtn = document.getElementById('btnSubmit');
+      const submitBtnText = document.getElementById('submitBtnText');
+      submitBtn.disabled = true;
+      submitBtnText.innerText = "Enviando a Google Sheets...";
+
+      const record = {
+        id: 'rec_' + Date.now(),
+        submittedAt: new Date().toISOString(),
+        weekDate: document.getElementById('weekDate').value,
+        designer: document.getElementById('designerName').value.trim(),
+        teamUnit: "Diseño Gráfico",
+        
+        starProject: document.getElementById('starProjectName').value.trim() || "Operación regular",
+        starValue: document.getElementById('starProjectValue').value.trim() || "Ejecución estándar",
+        starTime: document.getElementById('starTime').value,
+        
+        routineTasks: document.getElementById('routineTasks').value.trim() || "Ajustes y adaptaciones varias",
+        routineTime: document.getElementById('routineTime').value,
+        
+        hasIncident: document.getElementById('hasIncident').value,
+        incidentCause: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentCause').value : "N/A",
+        incidentDescription: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentDescription').value.trim() : "N/A",
+        costImpact: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('costImpact').value : "No aplica",
+        
+        innovationNotes: document.getElementById('innovationNotes').value.trim() || "N/A"
+      };
+
+      // 1. Send to Google Sheets Webhook
+      const webhookUrl = localStorage.getItem(WEBHOOK_KEY);
+      if (webhookUrl) {
+        try {
+          await fetch(webhookUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(record),
+            mode: 'no-cors' // Compatible with Google Apps Script
+          });
+        } catch (e) {
+          console.warn('Google Sheets dispatch note:', e);
+        }
+      } else {
+        console.info('No webhook URL configured. Record stored in memory.');
+      }
+
+      // 2. Trigger Confetti
+      confetti({
+        particleCount: 90,
+        spread: 75,
+        origin: { y: 0.6 }
+      });
+
+      // 3. Move to Success Screen
+      submitBtn.disabled = false;
+      submitBtnText.innerText = "Enviar a Google Sheets";
+      nextStep(5);
+    }
+
+    function resetForm() {
+      document.getElementById('starProjectName').value = "";
+      document.getElementById('starProjectValue').value = "";
+      document.getElementById('routineTasks').value = "";
+      document.getElementById('innovationNotes').value = "";
+      document.getElementById('incidentDescription').value = "";
+      setIncidentMode(false);
+      const allCards = document.querySelectorAll('.designer-card');
+      allCards.forEach(c => c.classList.remove('active'));
+      document.getElementById('designerName').value = "";
+      nextStep(0);
+    }
+
+    // Modal Handlers
+    function openConfigModal() {
+      document.getElementById('configModal').classList.remove('hidden');
+    }
+    function closeConfigModal() {
+      document.getElementById('configModal').classList.add('hidden');
+    }
+    function saveWebhookConfig() {
+      const url = document.getElementById('webhookUrlInput').value.trim();
+      localStorage.setItem(WEBHOOK_KEY, url);
+      alert("¡URL de Google Sheets guardada exitosamente!");
+      closeConfigModal();
+    }
+
+    document.getElementById('btnConfigModal').addEventListener('click', openConfigModal);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeConfigModal();
+    });
+  </script>
+</body>
+</html>
