@@ -1,535 +1,1276 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="palace">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Pulse | Check-in Creativo Semanal</title>
-  <!-- Google Fonts & Tailwind CDN -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons & Canvas Confetti -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <title>Weekly Pulse · Equipo de Diseño</title>
+
+  <!-- Palace Mare Design System -->
+  <link rel="stylesheet" href="./colors_and_type.css" />
+
+  <!-- Tabler Icons (Mare DS official icon set) -->
+  <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@3/tabler-icons.min.css" />
+
+  <!-- canvas-confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#f0f7ff',
-              100: '#e0effe',
-              400: '#38bdf8',
-              500: '#0284c7',
-              600: '#0369a1',
-              700: '#075985',
-              accent: '#6366f1',
-              gold: '#f59e0b'
-            }
-          }
-        }
-      }
-    }
-  </script>
   <style>
+    /* ─── Reset & Base ─── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      background: radial-gradient(circle at 10% 20%, rgba(15, 23, 42, 0.98) 0%, rgba(2, 6, 23, 1) 90%);
-      color: #f8fafc;
+      font-family: var(--font-base);
+      font-size: var(--font-body-m-size);
+      line-height: var(--font-body-m-lh);
+      color: var(--fg-default);
+      background: var(--bg-alternative);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--space-6) var(--space-4);
+      -webkit-font-smoothing: antialiased;
     }
-    .glass-panel {
-      background: rgba(30, 41, 59, 0.75);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+
+    /* ─── Layout shell ─── */
+    .shell {
+      width: 100%;
+      max-width: 640px;
     }
-    .glass-input {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      transition: all 0.25s ease;
+
+    /* ─── Top bar ─── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-4) 0;
+      margin-bottom: var(--space-6);
+      border-bottom: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      border-radius: var(--radius-xl);
+      padding: var(--space-4) var(--space-6);
+      box-shadow: 0 1px 4px var(--color-black-a8);
     }
-    .glass-input:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-      background: rgba(15, 23, 42, 0.85);
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
     }
+
+    .topbar-logo {
+      height: 28px;
+      width: auto;
+    }
+
+    .topbar-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border-default);
+    }
+
+    .topbar-title {
+      font-size: var(--font-title-xs-size);
+      line-height: var(--font-title-xs-lh);
+      font-weight: var(--font-title-xs-weight);
+      color: var(--fg-default);
+      letter-spacing: var(--font-title-xs-ls);
+    }
+
+    .topbar-sub {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+      margin-top: 2px;
+    }
+
+    /* ─── Progress ─── */
+    .progress-wrap {
+      margin-bottom: var(--space-4);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-2);
+    }
+
+    .progress-label {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+      font-weight: 500;
+    }
+
+    .progress-hint {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-accent);
+      font-weight: 500;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 4px;
+      background: var(--border-default);
+      border-radius: var(--radius-full);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--bg-accent);
+      border-radius: var(--radius-full);
+      width: 20%;
+      transition: width 0.3s cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* ─── Card ─── */
+    .card {
+      background: var(--bg-default);
+      border: var(--border-width-1) solid var(--border-default);
+      border-radius: var(--component-container-m-radius);
+      padding: var(--space-8);
+      box-shadow: 0 1px 4px var(--color-black-a8);
+    }
+
+    /* ─── Step card ─── */
     .step-card {
-      transition: opacity 0.35s ease, transform 0.35s ease;
+      transition: opacity 0.25s cubic-bezier(0.2,0,0,1);
     }
+
+    /* ─── Eyebrow / section tag ─── */
+    .eyebrow-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-1);
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      font-size: var(--font-body-xs-size);
+      font-weight: 500;
+      line-height: var(--font-body-xs-lh);
+      margin-bottom: var(--space-3);
+    }
+
+    .eyebrow-tag--neutral {
+      background: var(--bg-neutral-weak);
+      color: var(--fg-default);
+    }
+
+    .eyebrow-tag--accent {
+      background: var(--bg-accent-weak);
+      color: var(--fg-accent);
+    }
+
+    .eyebrow-tag--warning {
+      background: var(--bg-warning-weak);
+      color: var(--fg-warning);
+    }
+
+    .eyebrow-tag--danger {
+      background: var(--bg-danger-weak);
+      color: var(--fg-danger);
+    }
+
+    .eyebrow-tag--positive {
+      background: var(--bg-positive-weak);
+      color: var(--fg-positive);
+    }
+
+    /* ─── Typography utilities ─── */
+    .step-heading {
+      font-size: var(--font-title-s-size);
+      line-height: var(--font-title-s-lh);
+      font-weight: var(--font-title-s-weight);
+      letter-spacing: var(--font-title-s-ls);
+      color: var(--fg-default);
+      margin-bottom: var(--space-2);
+    }
+
+    .step-body {
+      font-size: var(--font-body-s-size);
+      line-height: var(--font-body-s-lh);
+      color: var(--fg-weak);
+      margin-bottom: var(--space-6);
+      max-width: 52ch;
+    }
+
+    /* ─── Field ─── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-1);
+    }
+
+    .field + .field { margin-top: var(--space-4); }
+
+    .field-label {
+      font-size: var(--font-label-s-size);
+      line-height: var(--font-label-s-lh);
+      font-weight: var(--font-label-s-weight);
+      color: var(--fg-default);
+    }
+
+    .field-label-weak {
+      font-weight: 400;
+      color: var(--fg-weak);
+    }
+
+    .input {
+      width: 100%;
+      padding: 10px var(--space-4);
+      border-radius: var(--component-input-radius);
+      border: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      font-family: var(--font-base);
+      font-size: var(--font-body-s-size);
+      line-height: var(--font-body-s-lh);
+      color: var(--fg-default);
+      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
+                  box-shadow 150ms cubic-bezier(0.2,0,0,1);
+      outline: none;
+    }
+
+    .input::placeholder { color: var(--fg-weak); }
+
+    .input:focus {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 3px rgba(24, 52, 86, 0.10);
+    }
+
+    .input--error { border-color: var(--border-danger); }
+    .input--error:focus { box-shadow: 0 0 0 3px rgba(185,28,28,0.10); }
+
+    .field-hint {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+    }
+
+    .field-hint--error { color: var(--fg-danger); }
+
+    /* ─── Option pills ─── */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+    }
+
+    .options-grid--3col {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
     .option-pill {
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: var(--space-3);
+      border-radius: var(--radius-lg);
+      border: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
+                  background 150ms cubic-bezier(0.2,0,0,1);
+      font-family: var(--font-base);
     }
+
     .option-pill:hover {
-      transform: translateY(-2px);
-      border-color: rgba(56, 189, 248, 0.5);
+      border-color: var(--border-accent);
+      background: var(--bg-hover);
     }
+
     .option-pill.active {
-      border-color: #38bdf8;
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.25) 0%, rgba(99, 102, 241, 0.25) 100%);
-      box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+      border-color: var(--border-accent);
+      background: var(--bg-accent-weak);
     }
+
+    .option-pill-title {
+      font-size: var(--font-label-xs-size);
+      font-weight: 500;
+      color: var(--fg-default);
+      line-height: var(--font-label-xs-lh);
+    }
+
+    .option-pill-sub {
+      font-size: var(--font-body-xxs-size);
+      color: var(--fg-weak);
+      margin-top: 2px;
+    }
+
+    /* ─── Designer cards ─── */
     .designer-card {
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 100%;
+      padding: var(--space-4);
+      border-radius: var(--radius-xl);
+      border: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
+                  background 150ms cubic-bezier(0.2,0,0,1);
+      font-family: var(--font-base);
+      text-align: left;
     }
+
     .designer-card:hover {
-      transform: translateY(-2px);
-      border-color: #38bdf8;
+      border-color: var(--border-accent);
+      background: var(--bg-hover);
     }
+
     .designer-card.active {
-      border-color: #38bdf8;
-      background: linear-gradient(135deg, rgba(2, 132, 199, 0.3) 0%, rgba(99, 102, 241, 0.3) 100%);
-      box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+      border-color: var(--border-accent);
+      background: var(--bg-accent-weak);
+    }
+
+    .designer-inner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .designer-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background: var(--bg-accent-weak);
+      border: 1px solid var(--border-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-label-xs-size);
+      font-weight: 500;
+      color: var(--fg-accent);
+      flex-shrink: 0;
+      letter-spacing: 0.5px;
+    }
+
+    .designer-name {
+      font-size: var(--font-label-s-size);
+      font-weight: 500;
+      color: var(--fg-default);
+    }
+
+    .designer-role {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+      margin-top: 2px;
+    }
+
+    .designer-chevron {
+      color: var(--fg-weak);
+      flex-shrink: 0;
+      transition: color 150ms;
+    }
+
+    .designer-card:hover .designer-chevron,
+    .designer-card.active .designer-chevron {
+      color: var(--fg-accent);
+    }
+
+    /* ─── Buttons ─── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+      border-radius: var(--component-button-radius);
+      font-family: var(--font-base);
+      font-size: var(--font-label-s-size);
+      font-weight: 500;
+      line-height: var(--font-label-s-lh);
+      padding: 10px var(--space-6);
+      border: var(--border-width-1) solid transparent;
+      cursor: pointer;
+      transition: background-color 150ms cubic-bezier(0.2,0,0,1),
+                  border-color 150ms,
+                  color 150ms,
+                  transform 150ms;
+      text-decoration: none;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn--primary {
+      background: var(--bg-accent);
+      color: var(--fg-on-accent);
+      border-color: transparent;
+    }
+
+    .btn--primary:hover { background: var(--bg-accent-hover); }
+
+    .btn--ghost {
+      background: transparent;
+      color: var(--fg-weak);
+      border-color: transparent;
+    }
+
+    .btn--ghost:hover {
+      background: var(--bg-hover);
+      color: var(--fg-default);
+    }
+
+    .btn--secondary {
+      background: transparent;
+      color: var(--fg-default);
+      border-color: var(--border-default);
+    }
+
+    .btn--secondary:hover { background: var(--bg-hover); }
+
+    .btn--danger {
+      background: var(--bg-danger);
+      color: var(--fg-on-danger);
+    }
+
+    .btn--danger:hover { background: var(--bg-danger-hover); }
+
+    .btn--sm {
+      font-size: var(--font-label-xs-size);
+      padding: 6px var(--space-4);
+    }
+
+    .btn:disabled {
+      background: var(--bg-disabled);
+      color: var(--fg-disabled);
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      display: inline-block;
+      animation: spin 700ms linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ─── Step nav footer ─── */
+    .step-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: var(--space-8);
+      padding-top: var(--space-6);
+      border-top: var(--border-width-1) solid var(--border-default);
+    }
+
+    /* ─── Summary preview box ─── */
+    .summary-box {
+      background: var(--bg-alternative);
+      border: var(--border-width-1) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-top: var(--space-4);
+    }
+
+    .summary-heading {
+      font-size: var(--font-body-xs-size);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: var(--font-overline-ls);
+      color: var(--fg-weak);
+      margin-bottom: var(--space-3);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: var(--font-body-xs-size);
+      padding: var(--space-2) 0;
+      border-bottom: var(--border-width-1) solid var(--border-default);
+    }
+
+    .summary-row:last-child { border-bottom: none; }
+
+    .summary-key { color: var(--fg-weak); }
+
+    .summary-val {
+      font-weight: 500;
+      color: var(--fg-default);
+      text-align: right;
+      max-width: 220px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .summary-val--accent { color: var(--fg-accent); }
+    .summary-val--positive { color: var(--fg-positive); }
+    .summary-val--danger { color: var(--fg-danger); }
+
+    /* ─── Incident detail block ─── */
+    .incident-block {
+      background: var(--bg-danger-weak);
+      border: var(--border-width-1) solid var(--border-danger);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      margin-top: var(--space-3);
+    }
+
+    .incident-block .field-label { color: var(--fg-danger); }
+
+    /* ─── Select ─── */
+    .select {
+      width: 100%;
+      padding: 10px var(--space-4);
+      border-radius: var(--component-input-radius);
+      border: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      font-family: var(--font-base);
+      font-size: var(--font-body-s-size);
+      color: var(--fg-default);
+      outline: none;
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    .select:focus {
+      border-color: var(--border-accent);
+      box-shadow: 0 0 0 3px rgba(24,52,86,0.10);
+    }
+
+    /* ─── Success screen ─── */
+    .success-screen {
+      text-align: center;
+      padding: var(--space-8) 0;
+    }
+
+    .success-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: var(--radius-2xl);
+      background: var(--bg-accent);
+      color: var(--fg-on-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto var(--space-6);
+    }
+
+    .success-title {
+      font-size: var(--font-title-m-size);
+      line-height: var(--font-title-m-lh);
+      font-weight: 500;
+      letter-spacing: var(--font-title-m-ls);
+      color: var(--fg-default);
+      margin-bottom: var(--space-3);
+    }
+
+    .success-body {
+      font-size: var(--font-body-s-size);
+      line-height: var(--font-body-s-lh-ed);
+      color: var(--fg-weak);
+      max-width: 44ch;
+      margin: 0 auto var(--space-8);
+    }
+
+    .success-actions {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      align-items: center;
+    }
+
+    @media (min-width: 480px) {
+      .success-actions { flex-direction: row; justify-content: center; }
+    }
+
+    /* ─── Admin button (header) ─── */
+    .admin-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 6px 14px;
+      border-radius: var(--component-button-radius);
+      font-size: var(--font-body-xs-size);
+      font-weight: 500;
+      color: var(--fg-default);
+      border: var(--border-width-1) solid var(--border-default);
+      background: var(--bg-default);
+      cursor: pointer;
+      transition: background 150ms, border-color 150ms;
+      font-family: var(--font-base);
+    }
+
+    .admin-btn:hover {
+      background: var(--bg-hover);
+      border-color: var(--border-strong);
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--fg-positive);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ─── Modal ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-4);
+      z-index: 50;
+    }
+
+    .modal-overlay.hidden { display: none; }
+
+    .modal-panel {
+      background: var(--bg-default);
+      border: var(--border-width-1) solid var(--border-default);
+      border-radius: var(--component-dialog-radius);
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-overlay);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-6) var(--space-6) var(--space-4);
+      border-bottom: var(--border-width-1) solid var(--border-default);
+    }
+
+    .modal-header-inner {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .modal-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-accent-weak);
+      color: var(--fg-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .modal-title {
+      font-size: var(--font-label-m-size);
+      font-weight: 500;
+      color: var(--fg-default);
+    }
+
+    .modal-subtitle {
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+      margin-top: 2px;
+    }
+
+    .modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-lg);
+      border: none;
+      background: transparent;
+      color: var(--fg-weak);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: background 150ms, color 150ms;
+    }
+
+    .modal-close:hover { background: var(--bg-hover); color: var(--fg-default); }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-6);
+      border-bottom: var(--border-width-1) solid var(--border-default);
+    }
+
+    .modal-actions-right { display: flex; gap: var(--space-2); }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-4) var(--space-6);
+    }
+
+    /* ─── Data table ─── */
+    .data-table-wrap {
+      border: var(--border-width-1) solid var(--border-default);
+      border-radius: var(--radius-lg);
+      overflow: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--font-body-xs-size);
+    }
+
+    .data-table thead {
+      background: var(--bg-alternative);
+      position: sticky;
+      top: 0;
+    }
+
+    .data-table th {
+      padding: var(--space-2) var(--space-3);
+      text-align: left;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--fg-weak);
+      border-bottom: var(--border-width-1) solid var(--border-default);
+      white-space: nowrap;
+    }
+
+    .data-table td {
+      padding: var(--space-2) var(--space-3);
+      color: var(--fg-default);
+      border-bottom: var(--border-width-1) solid var(--border-default);
+      vertical-align: middle;
+    }
+
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover { background: var(--bg-hover); }
+
+    .data-table .mono { font-family: ui-monospace, monospace; color: var(--fg-weak); }
+
+    /* Tags inside table */
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 10px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 500;
+      line-height: 16px;
+    }
+
+    .tag--positive { background: var(--bg-positive-weak); color: var(--fg-positive); }
+    .tag--danger   { background: var(--bg-danger-weak);   color: var(--fg-danger); }
+    .tag--accent   { background: var(--bg-accent-weak);   color: var(--fg-accent); }
+    .tag--neutral  { background: var(--bg-neutral-weak);  color: var(--fg-default); }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-3) var(--space-6);
+      border-top: var(--border-width-1) solid var(--border-default);
+      font-size: var(--font-body-xs-size);
+      color: var(--fg-weak);
+    }
+
+    .modal-footer code {
+      font-family: ui-monospace, monospace;
+      font-size: 11px;
+      color: var(--fg-accent);
+    }
+
+    /* ─── Empty / loading states ─── */
+    .state-msg {
+      padding: var(--space-12) var(--space-8);
+      text-align: center;
+      color: var(--fg-weak);
+      font-size: var(--font-body-s-size);
+    }
+
+    /* ─── Space between option groups ─── */
+    .space-y-3 > * + * { margin-top: var(--space-3); }
+    .space-y-4 > * + * { margin-top: var(--space-4); }
+
+    /* ─── Utility ─── */
+    .hidden { display: none !important; }
+
+    @media (max-width: 540px) {
+      .card { padding: var(--space-6) var(--space-5); }
+      .options-grid { grid-template-columns: 1fr; }
+      .options-grid--3col { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
-<body class="flex flex-col items-center justify-center p-4 md:p-8 selection:bg-sky-500 selection:text-white font-sans antialiased">
 
-  <!-- TOP BAR -->
-  <header class="w-full max-w-2xl flex items-center justify-between py-4 mb-4">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
-        <i data-lucide="sparkles" class="w-5 h-5 text-white"></i>
+<body>
+  <div class="shell">
+
+    <!-- ─── TOP BAR ─── -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <img src="./assets/logo-palace-default.svg" alt="Palace Resorts" class="topbar-logo" />
+        <div class="topbar-divider"></div>
+        <div>
+          <div class="topbar-title">Weekly Pulse</div>
+          <div class="topbar-sub">Check-in de Impacto · Equipo de Diseño</div>
+        </div>
       </div>
-      <div>
-        <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
-          Weekly Pulse
-          <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30">Diseño</span>
-        </h1>
-        <p class="text-xs text-slate-400">Check-in de Impacto & Productividad</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center gap-2">
-      <!-- Admin / DB View Button -->
-      <button id="btnAdminModal" class="px-3.5 py-1.5 text-xs font-semibold text-slate-200 bg-slate-800/90 hover:bg-slate-700 border border-slate-700 rounded-xl flex items-center gap-2 transition shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <i data-lucide="database" class="w-3.5 h-3.5 text-sky-400"></i>
-        <span>Historial & D1</span>
+
+      <button id="btnAdminModal" class="admin-btn">
+        <span class="live-dot"></span>
+        <i class="ti ti-database"></i>
+        <span>Historial · D1</span>
       </button>
-    </div>
-  </header>
+    </header>
 
-  <!-- MAIN SLIDER CARD CONTAINER -->
-  <main class="w-full max-w-2xl">
-    
-    <!-- Progress Indicator -->
-    <div id="progressContainer" class="mb-5">
-      <div class="flex justify-between items-center text-xs font-medium text-slate-400 mb-2">
-        <span id="stepLabel">Paso 1 de 5</span>
-        <span id="stepTitleHint" class="text-sky-400 font-semibold">Identificación</span>
+    <!-- ─── PROGRESS ─── -->
+    <div id="progressContainer" class="progress-wrap">
+      <div class="progress-meta">
+        <span id="stepLabel" class="progress-label">Paso 1 de 5</span>
+        <span id="stepTitleHint" class="progress-hint">Identificación</span>
       </div>
-      <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-        <div id="progressBar" class="h-full bg-gradient-to-r from-sky-500 via-indigo-500 to-sky-400 w-1/5 transition-all duration-300 ease-out"></div>
+      <div class="progress-track">
+        <div id="progressBar" class="progress-fill"></div>
       </div>
     </div>
 
-    <!-- FORM WRAPPER -->
-    <div class="glass-panel rounded-3xl p-6 md:p-8 relative overflow-hidden shadow-2xl">
+    <!-- ─── MAIN CARD ─── -->
+    <main>
+      <div class="card">
 
-      <!-- STEP 0: Selección de Diseñador -->
-      <div class="step-card" id="step-0">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/10 border border-sky-500/20 text-sky-400 text-xs font-semibold mb-3">
-          <i data-lucide="user-check" class="w-3.5 h-3.5"></i> Check-in Semanal
-        </div>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Hola equipo creativo! 👋</h2>
-        <p class="text-sm text-slate-300 mb-6 leading-relaxed">
-          Selecciona tu nombre para comenzar tu resumen semanal de <strong class="text-sky-300 font-medium">3 minutos</strong>.
-        </p>
+        <!-- STEP 0: Selección de Diseñador -->
+        <div class="step-card" id="step-0">
+          <div class="eyebrow-tag eyebrow-tag--neutral">
+            <i class="ti ti-user-check" style="font-size:13px;"></i>
+            Check-in semanal
+          </div>
+          <h2 class="step-heading">Hola, equipo creativo</h2>
+          <p class="step-body">
+            Selecciona tu nombre para comenzar tu resumen semanal de
+            <strong style="color: var(--fg-default); font-weight: 500;">3 minutos</strong>.
+          </p>
 
-        <div class="space-y-3" id="designerGroup">
-          
-          <button type="button" onclick="selectDesigner(this, 'Homero Hernandez Morales')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
-            <div class="flex items-center gap-3.5">
-              <div class="w-11 h-11 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm border border-sky-500/30">
-                HH
+          <div class="space-y-3" id="designerGroup">
+
+            <button type="button" onclick="selectDesigner(this, 'Homero Hernandez Morales')" class="designer-card">
+              <div class="designer-inner">
+                <div class="designer-avatar">HH</div>
+                <div>
+                  <div class="designer-name">Homero Hernandez Morales</div>
+                  <div class="designer-role">Equipo de Diseño</div>
+                </div>
               </div>
-              <div>
-                <div class="font-bold text-sm text-white group-hover:text-sky-300 transition">Homero Hernandez Morales</div>
-                <div class="text-xs text-slate-400">Equipo de Diseño</div>
+              <i class="ti ti-chevron-right designer-chevron"></i>
+            </button>
+
+            <button type="button" onclick="selectDesigner(this, 'Maria Esther Mendoza Franco')" class="designer-card">
+              <div class="designer-inner">
+                <div class="designer-avatar">ME</div>
+                <div>
+                  <div class="designer-name">Maria Esther Mendoza Franco</div>
+                  <div class="designer-role">Equipo de Diseño</div>
+                </div>
               </div>
-            </div>
-            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-sky-400 transition"></i>
-          </button>
+              <i class="ti ti-chevron-right designer-chevron"></i>
+            </button>
 
-          <button type="button" onclick="selectDesigner(this, 'Maria Esther Mendoza Franco')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
-            <div class="flex items-center gap-3.5">
-              <div class="w-11 h-11 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-sm border border-purple-500/30">
-                ME
+            <button type="button" onclick="selectDesigner(this, 'Michelle Pous Alarcon')" class="designer-card">
+              <div class="designer-inner">
+                <div class="designer-avatar">MP</div>
+                <div>
+                  <div class="designer-name">Michelle Pous Alarcon</div>
+                  <div class="designer-role">Equipo de Diseño</div>
+                </div>
               </div>
-              <div>
-                <div class="font-bold text-sm text-white group-hover:text-purple-300 transition">Maria Esther Mendoza Franco</div>
-                <div class="text-xs text-slate-400">Equipo de Diseño</div>
-              </div>
-            </div>
-            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-purple-400 transition"></i>
-          </button>
+              <i class="ti ti-chevron-right designer-chevron"></i>
+            </button>
 
-          <button type="button" onclick="selectDesigner(this, 'Michelle Pous Alarcon')" class="designer-card w-full p-4 rounded-2xl border border-slate-700/80 bg-slate-800/40 text-left flex items-center justify-between group">
-            <div class="flex items-center gap-3.5">
-              <div class="w-11 h-11 rounded-xl bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold text-sm border border-teal-500/30">
-                MP
-              </div>
-              <div>
-                <div class="font-bold text-sm text-white group-hover:text-teal-300 transition">Michelle Pous Alarcon</div>
-                <div class="text-xs text-slate-400">Equipo de Diseño</div>
-              </div>
-            </div>
-            <i data-lucide="chevron-right" class="w-5 h-5 text-slate-500 group-hover:text-teal-400 transition"></i>
-          </button>
-
-        </div>
-
-        <input type="hidden" id="designerName" value="" />
-        <input type="hidden" id="weekDate" value="" />
-      </div>
-
-      <!-- STEP 1: Proyecto Estrella (Valor e Impacto) -->
-      <div class="step-card hidden" id="step-1">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold mb-3">
-          <i data-lucide="star" class="w-3.5 h-3.5"></i> Sección 1 de 4
-        </div>
-        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">🌟 Tu Proyecto Estrella de la Semana</h2>
-        <p class="text-xs md:text-sm text-slate-300 mb-5">
-          El proyecto más relevante, retador o donde realmente aportaste una solución o valor especial.
-        </p>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Nombre del Proyecto o Solicitud Principal</label>
-            <input type="text" id="starProjectName" placeholder="Ej. Campaña Navidad 2026, Menús Restaurante Jade, Rebranding SPA..." class="glass-input w-full px-4 py-3 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none" />
           </div>
 
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">¿Qué aportaste de nuevo o diferente?</label>
-            <textarea id="starProjectValue" rows="2" placeholder="Ej. Se propuso nuevo layout más limpio que redujo el tiempo de lectura, se creó plantilla escalable..." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
+          <input type="hidden" id="designerName" value="" />
+          <input type="hidden" id="weekDate" value="" />
+        </div>
+
+        <!-- STEP 1: Proyecto Estrella -->
+        <div class="step-card hidden" id="step-1">
+          <div class="eyebrow-tag eyebrow-tag--accent">
+            <i class="ti ti-star" style="font-size:13px;"></i>
+            Sección 1 de 4
           </div>
+          <h2 class="step-heading">Tu proyecto estrella de la semana</h2>
+          <p class="step-body">
+            El proyecto más relevante, retador o donde aportaste una solución o valor especial.
+          </p>
 
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-              Tiempo invertido en este proyecto <span class="text-slate-400 font-normal">(Jornada: 48h)</span>
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="starTimeGroup">
-              <button type="button" data-val="< 8 hrs (Puntual)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Puntual (&lt; 8 hrs)</div>
-                <div class="text-[11px] text-slate-400">~1 día o apoyo rápido</div>
-              </button>
-              <button type="button" data-val="8 a 18 hrs (Parcial)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Parcial (8 a 18 hrs)</div>
-                <div class="text-[11px] text-slate-400">~1.5 a 2 días de trabajo</div>
-              </button>
-              <button type="button" data-val="18 a 30 hrs (Principal)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left active">
-                <div class="font-semibold text-xs text-white">Principal (18 a 30 hrs)</div>
-                <div class="text-[11px] text-slate-400">~2.5 a 3.5 días dedicados</div>
-              </button>
-              <button type="button" data-val="+30 hrs (Full Focus)" onclick="selectOption(this, 'starTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Full Focus (+30 hrs)</div>
-                <div class="text-[11px] text-slate-400">Prácticamente toda la semana</div>
-              </button>
-            </div>
-            <input type="hidden" id="starTime" value="18 a 30 hrs (Principal)" />
-          </div>
-        </div>
-
-        <div class="mt-7 flex justify-between items-center">
-          <button type="button" onclick="nextStep(0)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
-          </button>
-          <button type="button" onclick="nextStep(2)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
-            <span>Siguiente</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- STEP 2: Operación y Rutina -->
-      <div class="step-card hidden" id="step-2">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold mb-3">
-          <i data-lucide="layers" class="w-3.5 h-3.5"></i> Sección 2 de 4
-        </div>
-        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">⚙️ Operación del Día a Día</h2>
-        <p class="text-xs md:text-sm text-slate-300 mb-5">
-          Para registrar el tiempo invertido en solicitudes rutinarias (letreros, ajustes menores, adaptaciones de formatos).
-        </p>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">1 o 2 ejemplos representativos de lo que hiciste</label>
-            <textarea id="routineTasks" rows="2" placeholder="Ej. 1. Adaptación de letreros para buffet. 2. Cambios de logos en uniformes." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">
-              ¿Cuánto tiempo se te fue en esta rutina?
-            </label>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5" id="routineTimeGroup">
-              <button type="button" data-val="Baja (< 10 hrs | < 25%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Baja (&lt; 10 hrs)</div>
-                <div class="text-[11px] text-slate-400">&lt; 25% del tiempo semanal</div>
-              </button>
-              <button type="button" data-val="Balanceada (10 a 20 hrs | 25%-50%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left active">
-                <div class="font-semibold text-xs text-white">Balanceada (10 a 20 hrs)</div>
-                <div class="text-[11px] text-slate-400">25% - 50% de la jornada</div>
-              </button>
-              <button type="button" data-val="Alta Demanda (20 a 30 hrs | 50%-75%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Alta Demanda (20 a 30 hrs)</div>
-                <div class="text-[11px] text-slate-400">50% - 75% (mucha maquila)</div>
-              </button>
-              <button type="button" data-val="Bomberazos (+30 hrs | > 75%)" onclick="selectOption(this, 'routineTime')" class="option-pill p-3 rounded-xl border border-slate-700/70 bg-slate-800/40 text-left">
-                <div class="font-semibold text-xs text-white">Bomberazos (+30 hrs)</div>
-                <div class="text-[11px] text-slate-400">&gt; 75% apagando fuegos</div>
-              </button>
-            </div>
-            <input type="hidden" id="routineTime" value="Balanceada (10 a 20 hrs | 25%-50%)" />
-          </div>
-        </div>
-
-        <div class="mt-7 flex justify-between items-center">
-          <button type="button" onclick="nextStep(1)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
-          </button>
-          <button type="button" onclick="nextStep(3)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
-            <span>Siguiente</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- STEP 3: Incidencias & Retrabajos -->
-      <div class="step-card hidden" id="step-3">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-semibold mb-3">
-          <i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Sección 3 de 4
-        </div>
-        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">⚠️ Fricciones, Retrabajos & Costos</h2>
-        <p class="text-xs md:text-sm text-slate-300 mb-5">
-          Identifiquemos cuellos de botella (cambios de brief extemporáneos, mermas o fallas de proveedor) para solicitar mejoras en Gerencia.
-        </p>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-2">¿Se presentó algún retrabajo o error esta semana?</label>
-            <div class="grid grid-cols-2 gap-3" id="incidentToggle">
-              <button type="button" id="btnIncidentNo" onclick="setIncidentMode(false)" class="option-pill p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 text-center active">
-                <span class="text-base block mb-1">🚀</span>
-                <span class="font-bold text-xs text-white">Todo Fluyó Limpio</span>
-                <span class="text-[10px] text-slate-400 block">Sin retrabajos</span>
-              </button>
-              <button type="button" id="btnIncidentYes" onclick="setIncidentMode(true)" class="option-pill p-3.5 rounded-xl border border-slate-700 bg-slate-800/40 text-center">
-                <span class="text-base block mb-1">⚠️</span>
-                <span class="font-bold text-xs text-white">Hubo Fricción / Error</span>
-                <span class="text-[10px] text-slate-400 block">Requirió retrabajo</span>
-              </button>
-            </div>
-            <input type="hidden" id="hasIncident" value="No" />
-          </div>
-
-          <!-- Bloque condicional si HUBO incidencia -->
-          <div id="incidentDetailsBlock" class="hidden p-4 rounded-2xl bg-rose-950/20 border border-rose-500/20 space-y-3.5 transition-all">
-            <div>
-              <label class="block text-xs font-bold text-rose-300 mb-1">Causa Principal del Retrabajo</label>
-              <select id="incidentCause" class="glass-input w-full px-3.5 py-2.5 rounded-xl text-white text-xs focus:outline-none">
-                <option value="Cambio de solicitud/brief extemporáneo">Cambio de solicitud/brief extemporáneo por cliente interno</option>
-                <option value="Información o medidas incorrectas de origen">Información o medidas incorrectas en el brief inicial</option>
-                <option value="Falla o retraso en proveedor de impresión/producción">Falla o retraso en proveedor de impresión/producción</option>
-                <option value="Error de diseño / arte interno">Error de diseño / arte interno</option>
-                <option value="Otro motivo">Otro motivo</option>
-              </select>
+          <div class="space-y-4">
+            <div class="field">
+              <label class="field-label" for="starProjectName">Nombre del proyecto o solicitud principal</label>
+              <input
+                type="text"
+                id="starProjectName"
+                class="input"
+                placeholder="Campaña Navidad 2026, Menús Restaurante Jade, Rebranding SPA…"
+              />
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-rose-300 mb-1">Breve descripción de lo sucedido</label>
-              <input type="text" id="incidentDescription" placeholder="Ej. Se mandó a imprimir letrero pero solicitaron cambiar precios al día siguiente..." class="glass-input w-full px-3.5 py-2.5 rounded-xl text-white placeholder-slate-500 text-xs focus:outline-none" />
+            <div class="field">
+              <label class="field-label" for="starProjectValue">¿Qué aportaste de nuevo o diferente?</label>
+              <textarea
+                id="starProjectValue"
+                rows="3"
+                class="input"
+                placeholder="Se propuso nuevo layout más limpio que redujo el tiempo de lectura, se creó plantilla escalable…"
+              ></textarea>
             </div>
 
-            <div>
-              <label class="block text-xs font-bold text-rose-300 mb-1">¿Generó costo extra de dinero o merma de material?</label>
-              <div class="grid grid-cols-1 sm:grid-cols-3 gap-2" id="costImpactGroup">
-                <button type="button" data-val="No (Solo tiempo de diseño)" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white active">
-                  No (Solo tiempo)
+            <div class="field">
+              <label class="field-label">
+                Tiempo invertido en este proyecto
+                <span class="field-label-weak"> (Jornada: 48 h)</span>
+              </label>
+              <div class="options-grid" id="starTimeGroup">
+                <button type="button" data-val="< 8 hrs (Puntual)" onclick="selectOption(this,'starTime')" class="option-pill">
+                  <div class="option-pill-title">Puntual (&lt; 8 h)</div>
+                  <div class="option-pill-sub">~1 día o apoyo rápido</div>
                 </button>
-                <button type="button" data-val="Sí (Reimpresión/Proveedor)" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white">
-                  Sí (Reimpresión/Gasto)
+                <button type="button" data-val="8 a 18 hrs (Parcial)" onclick="selectOption(this,'starTime')" class="option-pill">
+                  <div class="option-pill-title">Parcial (8 a 18 h)</div>
+                  <div class="option-pill-sub">~1.5 a 2 días de trabajo</div>
                 </button>
-                <button type="button" data-val="Por determinar" onclick="selectOption(this, 'costImpact')" class="option-pill p-2 rounded-lg border border-slate-700 bg-slate-800/60 text-left text-[11px] text-white">
-                  Por determinar
+                <button type="button" data-val="18 a 30 hrs (Principal)" onclick="selectOption(this,'starTime')" class="option-pill active">
+                  <div class="option-pill-title">Principal (18 a 30 h)</div>
+                  <div class="option-pill-sub">~2.5 a 3.5 días dedicados</div>
+                </button>
+                <button type="button" data-val="+30 hrs (Full Focus)" onclick="selectOption(this,'starTime')" class="option-pill">
+                  <div class="option-pill-title">Full Focus (+30 h)</div>
+                  <div class="option-pill-sub">Prácticamente toda la semana</div>
                 </button>
               </div>
-              <input type="hidden" id="costImpact" value="No (Solo tiempo de diseño)" />
+              <input type="hidden" id="starTime" value="18 a 30 hrs (Principal)" />
             </div>
+          </div>
+
+          <div class="step-nav">
+            <button type="button" onclick="nextStep(0)" class="btn btn--ghost">
+              <i class="ti ti-arrow-left"></i> Atrás
+            </button>
+            <button type="button" onclick="nextStep(2)" class="btn btn--primary">
+              Siguiente <i class="ti ti-arrow-right"></i>
+            </button>
           </div>
         </div>
 
-        <div class="mt-7 flex justify-between items-center">
-          <button type="button" onclick="nextStep(2)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
-          </button>
-          <button type="button" onclick="nextStep(4)" class="px-6 py-3 rounded-xl bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 text-white font-semibold text-xs shadow-lg shadow-sky-500/20 flex items-center gap-2 transition active:scale-95">
-            <span>Siguiente</span>
-            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
+        <!-- STEP 2: Operación y Rutina -->
+        <div class="step-card hidden" id="step-2">
+          <div class="eyebrow-tag eyebrow-tag--neutral">
+            <i class="ti ti-layers-subtract" style="font-size:13px;"></i>
+            Sección 2 de 4
+          </div>
+          <h2 class="step-heading">Operación del día a día</h2>
+          <p class="step-body">
+            Registro de tiempo invertido en solicitudes rutinarias (letreros, ajustes menores, adaptaciones de formatos).
+          </p>
 
-      <!-- STEP 4: Innovación & Cierre -->
-      <div class="step-card hidden" id="step-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold mb-3">
-          <i data-lucide="zap" class="w-3.5 h-3.5"></i> Sección 4 de 4
-        </div>
-        <h2 class="text-xl md:text-2xl font-bold text-white mb-2">💡 Innovación & Aprendizaje</h2>
-        <p class="text-xs md:text-sm text-slate-300 mb-5">
-          ¿Descubriste un truco, atajo, plantilla o usaste IA (Claude, Photoshop AI) que te ahorró tiempo? ¡Presúmelo!
-        </p>
+          <div class="space-y-4">
+            <div class="field">
+              <label class="field-label" for="routineTasks">1 o 2 ejemplos representativos de lo que hiciste</label>
+              <textarea
+                id="routineTasks"
+                rows="3"
+                class="input"
+                placeholder="1. Adaptación de letreros para buffet. 2. Cambios de logos en uniformes."
+              ></textarea>
+            </div>
 
-        <div class="space-y-4">
+            <div class="field">
+              <label class="field-label">¿Cuánto tiempo se te fue en esta rutina?</label>
+              <div class="options-grid" id="routineTimeGroup">
+                <button type="button" data-val="Baja (< 10 hrs | < 25%)" onclick="selectOption(this,'routineTime')" class="option-pill">
+                  <div class="option-pill-title">Baja (&lt; 10 h)</div>
+                  <div class="option-pill-sub">&lt; 25% del tiempo semanal</div>
+                </button>
+                <button type="button" data-val="Balanceada (10 a 20 hrs | 25%-50%)" onclick="selectOption(this,'routineTime')" class="option-pill active">
+                  <div class="option-pill-title">Balanceada (10 a 20 h)</div>
+                  <div class="option-pill-sub">25% – 50% de la jornada</div>
+                </button>
+                <button type="button" data-val="Alta Demanda (20 a 30 hrs | 50%-75%)" onclick="selectOption(this,'routineTime')" class="option-pill">
+                  <div class="option-pill-title">Alta Demanda (20 a 30 h)</div>
+                  <div class="option-pill-sub">50% – 75% (mucha maquila)</div>
+                </button>
+                <button type="button" data-val="Bomberazos (+30 hrs | > 75%)" onclick="selectOption(this,'routineTime')" class="option-pill">
+                  <div class="option-pill-title">Bomberazos (+30 h)</div>
+                  <div class="option-pill-sub">&gt; 75% apagando fuegos</div>
+                </button>
+              </div>
+              <input type="hidden" id="routineTime" value="Balanceada (10 a 20 hrs | 25%-50%)" />
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <button type="button" onclick="nextStep(1)" class="btn btn--ghost">
+              <i class="ti ti-arrow-left"></i> Atrás
+            </button>
+            <button type="button" onclick="nextStep(3)" class="btn btn--primary">
+              Siguiente <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 3: Incidencias & Retrabajos -->
+        <div class="step-card hidden" id="step-3">
+          <div class="eyebrow-tag eyebrow-tag--danger">
+            <i class="ti ti-alert-triangle" style="font-size:13px;"></i>
+            Sección 3 de 4
+          </div>
+          <h2 class="step-heading">Fricciones, retrabajos y costos</h2>
+          <p class="step-body">
+            Identifiquemos cuellos de botella (cambios de brief extemporáneos, mermas o fallas de proveedor) para solicitar mejoras en Gerencia.
+          </p>
+
+          <div class="space-y-4">
+            <div class="field">
+              <label class="field-label">¿Se presentó algún retrabajo o error esta semana?</label>
+              <div class="options-grid" id="incidentToggle" style="margin-top: var(--space-2);">
+                <button type="button" id="btnIncidentNo" onclick="setIncidentMode(false)" class="option-pill active" style="text-align:center;">
+                  <div style="font-size:20px; margin-bottom:4px;"><i class="ti ti-rocket"></i></div>
+                  <div class="option-pill-title">Todo fluyó limpio</div>
+                  <div class="option-pill-sub">Sin retrabajos</div>
+                </button>
+                <button type="button" id="btnIncidentYes" onclick="setIncidentMode(true)" class="option-pill" style="text-align:center;">
+                  <div style="font-size:20px; margin-bottom:4px; color: var(--fg-warning);"><i class="ti ti-alert-triangle"></i></div>
+                  <div class="option-pill-title">Hubo fricción / error</div>
+                  <div class="option-pill-sub">Requirió retrabajo</div>
+                </button>
+              </div>
+              <input type="hidden" id="hasIncident" value="No" />
+            </div>
+
+            <!-- Conditional: incident details -->
+            <div id="incidentDetailsBlock" class="incident-block hidden">
+              <div class="field">
+                <label class="field-label" style="color: var(--fg-danger);">Causa principal del retrabajo</label>
+                <select id="incidentCause" class="select">
+                  <option value="Cambio de solicitud/brief extemporáneo">Cambio de solicitud/brief extemporáneo por cliente interno</option>
+                  <option value="Información o medidas incorrectas de origen">Información o medidas incorrectas en el brief inicial</option>
+                  <option value="Falla o retraso en proveedor de impresión/producción">Falla o retraso en proveedor de impresión/producción</option>
+                  <option value="Error de diseño / arte interno">Error de diseño / arte interno</option>
+                  <option value="Otro motivo">Otro motivo</option>
+                </select>
+              </div>
+
+              <div class="field" style="margin-top: var(--space-3);">
+                <label class="field-label" style="color: var(--fg-danger);">Breve descripción de lo sucedido</label>
+                <input
+                  type="text"
+                  id="incidentDescription"
+                  class="input"
+                  placeholder="Se mandó a imprimir letrero pero solicitaron cambiar precios al día siguiente…"
+                />
+              </div>
+
+              <div class="field" style="margin-top: var(--space-3);">
+                <label class="field-label" style="color: var(--fg-danger);">¿Generó costo extra de dinero o merma de material?</label>
+                <div class="options-grid options-grid--3col" id="costImpactGroup" style="margin-top: var(--space-2);">
+                  <button type="button" data-val="No (Solo tiempo de diseño)" onclick="selectOption(this,'costImpact')" class="option-pill active">
+                    <div class="option-pill-title">No (solo tiempo)</div>
+                  </button>
+                  <button type="button" data-val="Sí (Reimpresión/Proveedor)" onclick="selectOption(this,'costImpact')" class="option-pill">
+                    <div class="option-pill-title">Sí (reimpresión/gasto)</div>
+                  </button>
+                  <button type="button" data-val="Por determinar" onclick="selectOption(this,'costImpact')" class="option-pill">
+                    <div class="option-pill-title">Por determinar</div>
+                  </button>
+                </div>
+                <input type="hidden" id="costImpact" value="No (Solo tiempo de diseño)" />
+              </div>
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <button type="button" onclick="nextStep(2)" class="btn btn--ghost">
+              <i class="ti ti-arrow-left"></i> Atrás
+            </button>
+            <button type="button" onclick="nextStep(4)" class="btn btn--primary">
+              Siguiente <i class="ti ti-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 4: Innovación & Cierre -->
+        <div class="step-card hidden" id="step-4">
+          <div class="eyebrow-tag eyebrow-tag--positive">
+            <i class="ti ti-bulb" style="font-size:13px;"></i>
+            Sección 4 de 4
+          </div>
+          <h2 class="step-heading">Innovación y aprendizaje</h2>
+          <p class="step-body">
+            ¿Descubriste un truco, atajo, plantilla o usaste IA (Claude, Photoshop AI) que te ahorró tiempo? Presúmelo.
+          </p>
+
+          <div class="space-y-4">
+            <div class="field">
+              <label class="field-label">
+                Mejora, técnica o herramienta descubierta
+                <span class="field-label-weak"> (Opcional)</span>
+              </label>
+              <textarea
+                id="innovationNotes"
+                rows="3"
+                class="input"
+                placeholder="Creé una acción en Photoshop para exportar formatos en 1 clic; usé IA para generar fondo del spa ahorrando 2 horas…"
+              ></textarea>
+            </div>
+
+            <!-- Pre-send summary -->
+            <div class="summary-box">
+              <div class="summary-heading">Resumen de tu check-in</div>
+              <div class="summary-row">
+                <span class="summary-key">Diseñador</span>
+                <span class="summary-val" id="sumDesigner">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-key">Proyecto principal</span>
+                <span class="summary-val summary-val--accent" id="sumProject">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-key">Tiempo en proyecto</span>
+                <span class="summary-val" id="sumStarTime">—</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-key">Fricciones / Retrabajos</span>
+                <span class="summary-val summary-val--positive" id="sumIncident">Limpio</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-nav">
+            <button type="button" onclick="nextStep(3)" class="btn btn--ghost">
+              <i class="ti ti-arrow-left"></i> Atrás
+            </button>
+            <button type="button" id="btnSubmit" onclick="submitWeeklyPulse()" class="btn btn--primary">
+              <i class="ti ti-send"></i>
+              <span id="submitBtnText">Enviar check-in</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 5: Pantalla de éxito -->
+        <div class="step-card hidden success-screen" id="step-5">
+          <div class="success-icon">
+            <i class="ti ti-check" style="font-size:32px;"></i>
+          </div>
+          <h2 class="success-title">Registro guardado</h2>
+          <p class="success-body">
+            Tu reporte semanal quedó registrado en la base de datos central de Cloudflare D1.
+            Gracias por visibilizar tu esfuerzo — que tengas un excelente fin de semana.
+          </p>
+          <div class="success-actions">
+            <button type="button" onclick="resetForm()" class="btn btn--secondary">
+              Llenar otro registro
+            </button>
+            <button type="button" onclick="openAdminModal()" class="btn btn--primary">
+              <i class="ti ti-database"></i>
+              Ver base de datos D1
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /card -->
+    </main>
+
+  </div><!-- /shell -->
+
+  <!-- ─── MODAL: HISTORIAL & EXPORTADOR D1 ─── -->
+  <div id="adminModal" class="modal-overlay hidden">
+    <div class="modal-panel">
+
+      <div class="modal-header">
+        <div class="modal-header-inner">
+          <div class="modal-icon">
+            <i class="ti ti-database"></i>
+          </div>
           <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-1.5">Mejora, técnica o herramienta descubierta <span class="text-slate-400 font-normal">(Opcional)</span></label>
-            <textarea id="innovationNotes" rows="3" placeholder="Ej. Creé una acción en Photoshop para exportar formatos en 1 clic; usé IA para generar fondo del spa ahorrando 2 horas..." class="glass-input w-full px-4 py-2.5 rounded-xl text-white placeholder-slate-500 text-sm focus:outline-none"></textarea>
-          </div>
-
-          <!-- Resumen Rápido Pre-Envío -->
-          <div class="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs space-y-2 text-slate-300">
-            <div class="font-bold text-slate-200 uppercase tracking-wider text-[11px] mb-1">Resumen de tu Check-in:</div>
-            <div class="flex justify-between border-b border-slate-800/80 pb-1">
-              <span class="text-slate-400">Diseñador:</span>
-              <span id="sumDesigner" class="font-semibold text-white">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-800/80 pb-1">
-              <span class="text-slate-400">Proyecto Principal:</span>
-              <span id="sumProject" class="font-semibold text-sky-400 truncate max-w-[200px]">-</span>
-            </div>
-            <div class="flex justify-between border-b border-slate-800/80 pb-1">
-              <span class="text-slate-400">Tiempo Proyecto:</span>
-              <span id="sumStarTime" class="font-semibold text-white">-</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-slate-400">Fricciones / Retrabajos:</span>
-              <span id="sumIncident" class="font-semibold text-emerald-400">Limpio 🚀</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="mt-7 flex justify-between items-center">
-          <button type="button" onclick="nextStep(3)" class="px-4 py-2.5 rounded-xl text-slate-400 hover:text-white text-xs font-medium transition flex items-center gap-1.5">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Atrás
-          </button>
-          <button type="button" id="btnSubmit" onclick="submitWeeklyPulse()" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 hover:opacity-90 text-white font-bold text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-2 transition active:scale-95">
-            <i data-lucide="send" class="w-4 h-4"></i>
-            <span id="submitBtnText">Enviar Check-in</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- STEP 5: Pantalla de Éxito 🎉 -->
-      <div class="step-card hidden text-center py-6" id="step-5">
-        <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-emerald-500/30">
-          <i data-lucide="check" class="w-10 h-10 text-white stroke-[3]"></i>
-        </div>
-        <h2 class="text-2xl md:text-3xl font-extrabold text-white mb-2">¡Guardado con Éxito! 🎉</h2>
-        <p class="text-sm text-slate-300 max-w-md mx-auto mb-6 leading-relaxed">
-          Tu reporte semanal quedó registrado en la base de datos central de Cloudflare D1. ¡Gracias por visibilizar tu esfuerzo y que tengas un excelente fin de semana! 🏖️
-        </p>
-
-        <div class="flex flex-col sm:flex-row justify-center gap-3">
-          <button type="button" onclick="resetForm()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
-            Llenar otro registro
-          </button>
-          <button type="button" onclick="openAdminModal()" class="px-5 py-2.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 text-xs font-semibold border border-sky-500/30 transition flex items-center justify-center gap-1.5">
-            <i data-lucide="database" class="w-3.5 h-3.5"></i>
-            <span>Ver Base de Datos D1</span>
-          </button>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- MODAL: HISTORIAL & EXPORTADOR CLOUDFLARE D1 -->
-  <div id="adminModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
-    <div class="glass-panel w-full max-w-4xl max-h-[90vh] rounded-3xl p-6 md:p-8 flex flex-col shadow-2xl border border-slate-700 overflow-hidden">
-      
-      <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
-            <i data-lucide="database" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h3 class="text-base font-bold text-white">Base de Datos Cloudflare D1</h3>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold flex items-center gap-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Conectada (pulse_db)
+            <div class="modal-title">
+              Base de datos · Cloudflare D1
+              <span class="tag tag--positive" style="margin-left: 8px; vertical-align: middle;">
+                <span style="width:6px;height:6px;border-radius:50%;background:var(--fg-positive);display:inline-block;"></span>
+                pulse_db
               </span>
             </div>
-            <p class="text-xs text-slate-400">Respuestas del equipo almacenadas en la nube 24/7.</p>
+            <div class="modal-subtitle">Respuestas del equipo almacenadas en la nube 24/7</div>
           </div>
         </div>
-        <button onclick="closeAdminModal()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition">
-          <i data-lucide="x" class="w-5 h-5"></i>
+        <button onclick="closeAdminModal()" class="modal-close" aria-label="Cerrar">
+          <i class="ti ti-x"></i>
         </button>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="py-4 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80">
-        <button onclick="fetchD1Records()" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 border border-slate-700 transition">
-          <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-          <span>Actualizar Datos</span>
+      <div class="modal-actions">
+        <button onclick="fetchD1Records()" class="btn btn--secondary btn--sm">
+          <i class="ti ti-refresh"></i>
+          Actualizar datos
         </button>
-
-        <div class="flex items-center gap-2">
-          <a href="/api/export-csv" target="_blank" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition">
-            <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
-            <span>Descargar CSV (Excel)</span>
+        <div class="modal-actions-right">
+          <a href="/api/export-csv" target="_blank" class="btn btn--primary btn--sm">
+            <i class="ti ti-file-spreadsheet"></i>
+            Descargar CSV
           </a>
-          <button onclick="generateClaudePromptFromD1()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition">
-            <i data-lucide="bot" class="w-4 h-4"></i>
-            <span>Copiar Prompt para Claude</span>
+          <button onclick="generateClaudePromptFromD1()" class="btn btn--secondary btn--sm">
+            <i class="ti ti-robot"></i>
+            Copiar prompt para Claude
           </button>
         </div>
       </div>
 
-      <!-- Tabla de Datos -->
-      <div class="flex-1 overflow-y-auto my-4 rounded-xl border border-slate-800 bg-slate-950/50">
-        <table class="w-full text-left text-xs text-slate-300">
-          <thead class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 sticky top-0 border-b border-slate-800">
-            <tr>
-              <th class="p-3">Fecha</th>
-              <th class="p-3">Diseñador</th>
-              <th class="p-3">Proyecto Clave</th>
-              <th class="p-3">Horas Proy.</th>
-              <th class="p-3">Horas Rutina</th>
-              <th class="p-3">Incidencia</th>
-            </tr>
-          </thead>
-          <tbody id="dataTableBody" class="divide-y divide-slate-800/60">
-            <!-- Dynamic rows -->
-          </tbody>
-        </table>
-        <div id="loadingMsg" class="p-8 text-center text-slate-400 text-xs">
-          Cargando registros desde Cloudflare D1...
-        </div>
-        <div id="noDataMsg" class="p-8 text-center text-slate-500 text-xs hidden">
-          No hay registros en la base de datos todavía. Completa el primer check-in para verlo aquí.
+      <div class="modal-body">
+        <div class="data-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Fecha</th>
+                <th>Diseñador</th>
+                <th>Proyecto clave</th>
+                <th>Horas proy.</th>
+                <th>Horas rutina</th>
+                <th>Incidencia</th>
+              </tr>
+            </thead>
+            <tbody id="dataTableBody"></tbody>
+          </table>
+          <div id="loadingMsg" class="state-msg">
+            <i class="ti ti-loader" style="font-size:20px; display:block; margin-bottom:8px;"></i>
+            Cargando registros desde Cloudflare D1…
+          </div>
+          <div id="noDataMsg" class="state-msg hidden">
+            No hay registros en la base de datos todavía.<br>
+            Completa el primer check-in para verlo aquí.
+          </div>
         </div>
       </div>
 
-      <!-- Modal Footer -->
-      <div class="pt-3 flex justify-between items-center text-xs text-slate-500 border-t border-slate-800">
+      <div class="modal-footer">
         <span id="totalRecordsLabel">0 registros en Cloudflare D1</span>
-        <span class="text-[11px] text-slate-400">Endpoint: <code class="text-sky-400 font-mono">/api/responses</code></span>
+        <span>Endpoint: <code>/api/responses</code></span>
       </div>
 
     </div>
   </div>
 
-  <!-- JAVASCRIPT LOGIC -->
+  <!-- ─── JAVASCRIPT (lógica preservada intacta) ─── -->
   <script>
-    lucide.createIcons();
-
     // Auto-compute current date
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
@@ -539,7 +1280,7 @@
     const totalSteps = 4;
     const stepTitles = [
       "Identificación",
-      "Proyecto Estrella",
+      "Proyecto estrella",
       "Operación & Rutina",
       "Incidencias & Retrabajos",
       "Innovación & Cierre"
@@ -552,7 +1293,7 @@
       allCards.forEach(c => c.classList.remove('active'));
       card.classList.add('active');
       document.getElementById('designerName').value = name;
-      
+
       setTimeout(() => {
         nextStep(1);
       }, 200);
@@ -595,11 +1336,11 @@
         const hasInc = document.getElementById('hasIncident').value === "Sí";
         const sumIncEl = document.getElementById('sumIncident');
         if (hasInc) {
-          sumIncEl.innerText = "Con Incidencia ⚠️";
-          sumIncEl.className = "font-semibold text-rose-400";
+          sumIncEl.innerText = "Con incidencia";
+          sumIncEl.className = "summary-val summary-val--danger";
         } else {
-          sumIncEl.innerText = "Limpio 🚀";
-          sumIncEl.className = "font-semibold text-emerald-400";
+          sumIncEl.innerText = "Limpio";
+          sumIncEl.className = "summary-val summary-val--positive";
         }
       }
 
@@ -637,7 +1378,7 @@
       const submitBtn = document.getElementById('btnSubmit');
       const submitBtnText = document.getElementById('submitBtnText');
       submitBtn.disabled = true;
-      submitBtnText.innerText = "Guardando en Cloudflare D1...";
+      submitBtnText.innerHTML = '<span class="spinner"></span> Guardando…';
 
       const record = {
         id: 'rec_' + Date.now(),
@@ -645,19 +1386,19 @@
         weekDate: document.getElementById('weekDate').value,
         designer: document.getElementById('designerName').value.trim(),
         teamUnit: "Diseño Gráfico",
-        
+
         starProject: document.getElementById('starProjectName').value.trim() || "Operación regular",
         starValue: document.getElementById('starProjectValue').value.trim() || "Ejecución estándar",
         starTime: document.getElementById('starTime').value,
-        
+
         routineTasks: document.getElementById('routineTasks').value.trim() || "Ajustes y adaptaciones varias",
         routineTime: document.getElementById('routineTime').value,
-        
+
         hasIncident: document.getElementById('hasIncident').value,
         incidentCause: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentCause').value : "N/A",
         incidentDescription: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentDescription').value.trim() : "N/A",
         costImpact: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('costImpact').value : "No aplica",
-        
+
         innovationNotes: document.getElementById('innovationNotes').value.trim() || "N/A"
       };
 
@@ -679,16 +1420,17 @@
         localStorage.setItem("weekly_pulse_backup", JSON.stringify(local));
       } catch(e) {}
 
-      // 3. Trigger Confetti
+      // 3. Trigger Confetti (Palace navy palette)
       confetti({
-        particleCount: 90,
-        spread: 75,
+        particleCount: 80,
+        spread: 70,
+        colors: ['#183456', '#1a4372', '#9b6f41', '#c69449', '#ffffff'],
         origin: { y: 0.6 }
       });
 
-      // 4. Move to Success Screen
+      // 4. Move to success screen
       submitBtn.disabled = false;
-      submitBtnText.innerText = "Enviar Check-in";
+      submitBtnText.innerText = "Enviar check-in";
       nextStep(5);
     }
 
@@ -745,25 +1487,23 @@
 
       cachedD1Data.forEach(r => {
         const tr = document.createElement('tr');
-        tr.className = "hover:bg-slate-900/50 transition";
         const hasInc = (r.has_incident || r.hasIncident) === "Sí";
         const cost = r.cost_impact || r.costImpact || "No";
         tr.innerHTML = `
-          <td class="p-3 font-mono text-slate-400 text-[11px]">${r.week_date || r.weekDate || (r.submitted_at || r.submittedAt || '').slice(0,10)}</td>
-          <td class="p-3 font-semibold text-white">${r.designer}</td>
-          <td class="p-3 text-sky-300 font-medium">${r.star_project || r.starProject}</td>
-          <td class="p-3">${r.star_time || r.starTime}</td>
-          <td class="p-3">${r.routine_time || r.routineTime}</td>
-          <td class="p-3">
-            ${hasInc 
-              ? `<span class="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold">⚠️ ${cost}</span>` 
-              : `<span class="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold">Limpio</span>`
+          <td class="mono">${r.week_date || r.weekDate || (r.submitted_at || r.submittedAt || '').slice(0,10)}</td>
+          <td style="font-weight:500;">${r.designer}</td>
+          <td style="color:var(--fg-accent);">${r.star_project || r.starProject}</td>
+          <td>${r.star_time || r.starTime}</td>
+          <td>${r.routine_time || r.routineTime}</td>
+          <td>
+            ${hasInc
+              ? `<span class="tag tag--danger"><i class="ti ti-alert-triangle" style="font-size:11px;"></i> ${cost}</span>`
+              : `<span class="tag tag--positive"><i class="ti ti-check" style="font-size:11px;"></i> Limpio</span>`
             }
           </td>
         `;
         tbody.appendChild(tr);
       });
-      lucide.createIcons();
     }
 
     function generateClaudePromptFromD1() {
@@ -778,7 +1518,7 @@ Con base en esta información, redacta el **Reporte Ejecutivo Mensual de Product
 
 Requisitos del Reporte:
 1. **Resumen Ejecutivo General:** Visión panorámica del mes, horas totales invertidas, balance general entre Proyectos de Valor vs. Operación de Rutina (letreros, adaptaciones).
-2. **Desglose por Diseñador:** 
+2. **Desglose por Diseñador:**
    - Proyectos de alto impacto y valor aportado.
    - Distribución estimada de tiempo (% proyectos vs % rutina).
    - Logros o innovaciones destacadas.
@@ -793,7 +1533,7 @@ ${JSON.stringify(cachedD1Data, null, 2)}
 `;
 
       navigator.clipboard.writeText(prompt).then(() => {
-        alert("¡Prompt copiado al portapapeles! 📋✨\n\nSolo pégalo en Claude para que te genere el reporte ejecutivo completo.");
+        alert("Prompt copiado al portapapeles.\n\nPégalo en Claude para generar el reporte ejecutivo completo.");
       }).catch(err => {
         console.error("Error al copiar:", err);
       });
@@ -804,5 +1544,6 @@ ${JSON.stringify(cachedD1Data, null, 2)}
       if (e.key === 'Escape') closeAdminModal();
     });
   </script>
+
 </body>
 </html>
