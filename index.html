@@ -1,1549 +1,1667 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="palace">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Weekly Pulse · Equipo de Diseño</title>
-
-  <!-- Palace Mare Design System -->
-  <link rel="stylesheet" href="./colors_and_type.css" />
-
-  <!-- Tabler Icons (Mare DS official icon set) -->
-  <link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@3/tabler-icons.min.css" />
-
-  <!-- canvas-confetti -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-
-  <style>
-    /* ─── Reset & Base ─── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: var(--font-base);
-      font-size: var(--font-body-m-size);
-      line-height: var(--font-body-m-lh);
-      color: var(--fg-default);
-      background: var(--bg-alternative);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: var(--space-6) var(--space-4);
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* ─── Layout shell ─── */
-    .shell {
-      width: 100%;
-      max-width: 640px;
-    }
-
-    /* ─── Top bar ─── */
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-4) 0;
-      margin-bottom: var(--space-6);
-      border-bottom: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      border-radius: var(--radius-xl);
-      padding: var(--space-4) var(--space-6);
-      box-shadow: 0 1px 4px var(--color-black-a8);
-    }
-
-    .topbar-brand {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-
-    .topbar-logo {
-      height: 28px;
-      width: auto;
-    }
-
-    .topbar-divider {
-      width: 1px;
-      height: 20px;
-      background: var(--border-default);
-    }
-
-    .topbar-title {
-      font-size: var(--font-title-xs-size);
-      line-height: var(--font-title-xs-lh);
-      font-weight: var(--font-title-xs-weight);
-      color: var(--fg-default);
-      letter-spacing: var(--font-title-xs-ls);
-    }
-
-    .topbar-sub {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-      margin-top: 2px;
-    }
-
-    /* ─── Progress ─── */
-    .progress-wrap {
-      margin-bottom: var(--space-4);
-    }
-
-    .progress-meta {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--space-2);
-    }
-
-    .progress-label {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-      font-weight: 500;
-    }
-
-    .progress-hint {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-accent);
-      font-weight: 500;
-    }
-
-    .progress-track {
-      width: 100%;
-      height: 4px;
-      background: var(--border-default);
-      border-radius: var(--radius-full);
-      overflow: hidden;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--bg-accent);
-      border-radius: var(--radius-full);
-      width: 20%;
-      transition: width 0.3s cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* ─── Card ─── */
-    .card {
-      background: var(--bg-default);
-      border: var(--border-width-1) solid var(--border-default);
-      border-radius: var(--component-container-m-radius);
-      padding: var(--space-8);
-      box-shadow: 0 1px 4px var(--color-black-a8);
-    }
-
-    /* ─── Step card ─── */
-    .step-card {
-      transition: opacity 0.25s cubic-bezier(0.2,0,0,1);
-    }
-
-    /* ─── Eyebrow / section tag ─── */
-    .eyebrow-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-1);
-      padding: 4px 12px;
-      border-radius: var(--radius-full);
-      font-size: var(--font-body-xs-size);
-      font-weight: 500;
-      line-height: var(--font-body-xs-lh);
-      margin-bottom: var(--space-3);
-    }
-
-    .eyebrow-tag--neutral {
-      background: var(--bg-neutral-weak);
-      color: var(--fg-default);
-    }
-
-    .eyebrow-tag--accent {
-      background: var(--bg-accent-weak);
-      color: var(--fg-accent);
-    }
-
-    .eyebrow-tag--warning {
-      background: var(--bg-warning-weak);
-      color: var(--fg-warning);
-    }
-
-    .eyebrow-tag--danger {
-      background: var(--bg-danger-weak);
-      color: var(--fg-danger);
-    }
-
-    .eyebrow-tag--positive {
-      background: var(--bg-positive-weak);
-      color: var(--fg-positive);
-    }
-
-    /* ─── Typography utilities ─── */
-    .step-heading {
-      font-size: var(--font-title-s-size);
-      line-height: var(--font-title-s-lh);
-      font-weight: var(--font-title-s-weight);
-      letter-spacing: var(--font-title-s-ls);
-      color: var(--fg-default);
-      margin-bottom: var(--space-2);
-    }
-
-    .step-body {
-      font-size: var(--font-body-s-size);
-      line-height: var(--font-body-s-lh);
-      color: var(--fg-weak);
-      margin-bottom: var(--space-6);
-      max-width: 52ch;
-    }
-
-    /* ─── Field ─── */
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-1);
-    }
-
-    .field + .field { margin-top: var(--space-4); }
-
-    .field-label {
-      font-size: var(--font-label-s-size);
-      line-height: var(--font-label-s-lh);
-      font-weight: var(--font-label-s-weight);
-      color: var(--fg-default);
-    }
-
-    .field-label-weak {
-      font-weight: 400;
-      color: var(--fg-weak);
-    }
-
-    .input {
-      width: 100%;
-      padding: 10px var(--space-4);
-      border-radius: var(--component-input-radius);
-      border: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      font-family: var(--font-base);
-      font-size: var(--font-body-s-size);
-      line-height: var(--font-body-s-lh);
-      color: var(--fg-default);
-      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
-                  box-shadow 150ms cubic-bezier(0.2,0,0,1);
-      outline: none;
-    }
-
-    .input::placeholder { color: var(--fg-weak); }
-
-    .input:focus {
-      border-color: var(--border-accent);
-      box-shadow: 0 0 0 3px rgba(24, 52, 86, 0.10);
-    }
-
-    .input--error { border-color: var(--border-danger); }
-    .input--error:focus { box-shadow: 0 0 0 3px rgba(185,28,28,0.10); }
-
-    .field-hint {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-    }
-
-    .field-hint--error { color: var(--fg-danger); }
-
-    /* ─── Option pills ─── */
-    .options-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--space-2);
-    }
-
-    .options-grid--3col {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .option-pill {
-      padding: var(--space-3);
-      border-radius: var(--radius-lg);
-      border: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      text-align: left;
-      cursor: pointer;
-      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
-                  background 150ms cubic-bezier(0.2,0,0,1);
-      font-family: var(--font-base);
-    }
-
-    .option-pill:hover {
-      border-color: var(--border-accent);
-      background: var(--bg-hover);
-    }
-
-    .option-pill.active {
-      border-color: var(--border-accent);
-      background: var(--bg-accent-weak);
-    }
-
-    .option-pill-title {
-      font-size: var(--font-label-xs-size);
-      font-weight: 500;
-      color: var(--fg-default);
-      line-height: var(--font-label-xs-lh);
-    }
-
-    .option-pill-sub {
-      font-size: var(--font-body-xxs-size);
-      color: var(--fg-weak);
-      margin-top: 2px;
-    }
-
-    /* ─── Designer cards ─── */
-    .designer-card {
-      width: 100%;
-      padding: var(--space-4);
-      border-radius: var(--radius-xl);
-      border: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: border-color 150ms cubic-bezier(0.2,0,0,1),
-                  background 150ms cubic-bezier(0.2,0,0,1);
-      font-family: var(--font-base);
-      text-align: left;
-    }
-
-    .designer-card:hover {
-      border-color: var(--border-accent);
-      background: var(--bg-hover);
-    }
-
-    .designer-card.active {
-      border-color: var(--border-accent);
-      background: var(--bg-accent-weak);
-    }
-
-    .designer-inner {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-
-    .designer-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-full);
-      background: var(--bg-accent-weak);
-      border: 1px solid var(--border-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: var(--font-label-xs-size);
-      font-weight: 500;
-      color: var(--fg-accent);
-      flex-shrink: 0;
-      letter-spacing: 0.5px;
-    }
-
-    .designer-name {
-      font-size: var(--font-label-s-size);
-      font-weight: 500;
-      color: var(--fg-default);
-    }
-
-    .designer-role {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-      margin-top: 2px;
-    }
-
-    .designer-chevron {
-      color: var(--fg-weak);
-      flex-shrink: 0;
-      transition: color 150ms;
-    }
-
-    .designer-card:hover .designer-chevron,
-    .designer-card.active .designer-chevron {
-      color: var(--fg-accent);
-    }
-
-    /* ─── Buttons ─── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--space-2);
-      border-radius: var(--component-button-radius);
-      font-family: var(--font-base);
-      font-size: var(--font-label-s-size);
-      font-weight: 500;
-      line-height: var(--font-label-s-lh);
-      padding: 10px var(--space-6);
-      border: var(--border-width-1) solid transparent;
-      cursor: pointer;
-      transition: background-color 150ms cubic-bezier(0.2,0,0,1),
-                  border-color 150ms,
-                  color 150ms,
-                  transform 150ms;
-      text-decoration: none;
-    }
-
-    .btn:active { transform: scale(0.97); }
-
-    .btn--primary {
-      background: var(--bg-accent);
-      color: var(--fg-on-accent);
-      border-color: transparent;
-    }
-
-    .btn--primary:hover { background: var(--bg-accent-hover); }
-
-    .btn--ghost {
-      background: transparent;
-      color: var(--fg-weak);
-      border-color: transparent;
-    }
-
-    .btn--ghost:hover {
-      background: var(--bg-hover);
-      color: var(--fg-default);
-    }
-
-    .btn--secondary {
-      background: transparent;
-      color: var(--fg-default);
-      border-color: var(--border-default);
-    }
-
-    .btn--secondary:hover { background: var(--bg-hover); }
-
-    .btn--danger {
-      background: var(--bg-danger);
-      color: var(--fg-on-danger);
-    }
-
-    .btn--danger:hover { background: var(--bg-danger-hover); }
-
-    .btn--sm {
-      font-size: var(--font-label-xs-size);
-      padding: 6px var(--space-4);
-    }
-
-    .btn:disabled {
-      background: var(--bg-disabled);
-      color: var(--fg-disabled);
-      cursor: not-allowed;
-    }
-
-    .spinner {
-      width: 14px;
-      height: 14px;
-      border: 2px solid currentColor;
-      border-right-color: transparent;
-      border-radius: 50%;
-      display: inline-block;
-      animation: spin 700ms linear infinite;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ─── Step nav footer ─── */
-    .step-nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: var(--space-8);
-      padding-top: var(--space-6);
-      border-top: var(--border-width-1) solid var(--border-default);
-    }
-
-    /* ─── Summary preview box ─── */
-    .summary-box {
-      background: var(--bg-alternative);
-      border: var(--border-width-1) solid var(--border-default);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-      margin-top: var(--space-4);
-    }
-
-    .summary-heading {
-      font-size: var(--font-body-xs-size);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: var(--font-overline-ls);
-      color: var(--fg-weak);
-      margin-bottom: var(--space-3);
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      font-size: var(--font-body-xs-size);
-      padding: var(--space-2) 0;
-      border-bottom: var(--border-width-1) solid var(--border-default);
-    }
-
-    .summary-row:last-child { border-bottom: none; }
-
-    .summary-key { color: var(--fg-weak); }
-
-    .summary-val {
-      font-weight: 500;
-      color: var(--fg-default);
-      text-align: right;
-      max-width: 220px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .summary-val--accent { color: var(--fg-accent); }
-    .summary-val--positive { color: var(--fg-positive); }
-    .summary-val--danger { color: var(--fg-danger); }
-
-    /* ─── Incident detail block ─── */
-    .incident-block {
-      background: var(--bg-danger-weak);
-      border: var(--border-width-1) solid var(--border-danger);
-      border-radius: var(--radius-lg);
-      padding: var(--space-4);
-      margin-top: var(--space-3);
-    }
-
-    .incident-block .field-label { color: var(--fg-danger); }
-
-    /* ─── Select ─── */
-    .select {
-      width: 100%;
-      padding: 10px var(--space-4);
-      border-radius: var(--component-input-radius);
-      border: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      font-family: var(--font-base);
-      font-size: var(--font-body-s-size);
-      color: var(--fg-default);
-      outline: none;
-      cursor: pointer;
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-    }
-
-    .select:focus {
-      border-color: var(--border-accent);
-      box-shadow: 0 0 0 3px rgba(24,52,86,0.10);
-    }
-
-    /* ─── Success screen ─── */
-    .success-screen {
-      text-align: center;
-      padding: var(--space-8) 0;
-    }
-
-    .success-icon {
-      width: 72px;
-      height: 72px;
-      border-radius: var(--radius-2xl);
-      background: var(--bg-accent);
-      color: var(--fg-on-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto var(--space-6);
-    }
-
-    .success-title {
-      font-size: var(--font-title-m-size);
-      line-height: var(--font-title-m-lh);
-      font-weight: 500;
-      letter-spacing: var(--font-title-m-ls);
-      color: var(--fg-default);
-      margin-bottom: var(--space-3);
-    }
-
-    .success-body {
-      font-size: var(--font-body-s-size);
-      line-height: var(--font-body-s-lh-ed);
-      color: var(--fg-weak);
-      max-width: 44ch;
-      margin: 0 auto var(--space-8);
-    }
-
-    .success-actions {
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-2);
-      align-items: center;
-    }
-
-    @media (min-width: 480px) {
-      .success-actions { flex-direction: row; justify-content: center; }
-    }
-
-    /* ─── Admin button (header) ─── */
-    .admin-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--space-2);
-      padding: 6px 14px;
-      border-radius: var(--component-button-radius);
-      font-size: var(--font-body-xs-size);
-      font-weight: 500;
-      color: var(--fg-default);
-      border: var(--border-width-1) solid var(--border-default);
-      background: var(--bg-default);
-      cursor: pointer;
-      transition: background 150ms, border-color 150ms;
-      font-family: var(--font-base);
-    }
-
-    .admin-btn:hover {
-      background: var(--bg-hover);
-      border-color: var(--border-strong);
-    }
-
-    .live-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--fg-positive);
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
-
-    /* ─── Modal ─── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--bg-overlay);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-4);
-      z-index: 50;
-    }
-
-    .modal-overlay.hidden { display: none; }
-
-    .modal-panel {
-      background: var(--bg-default);
-      border: var(--border-width-1) solid var(--border-default);
-      border-radius: var(--component-dialog-radius);
-      width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: var(--shadow-overlay);
-      overflow: hidden;
-    }
-
-    .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: var(--space-6) var(--space-6) var(--space-4);
-      border-bottom: var(--border-width-1) solid var(--border-default);
-    }
-
-    .modal-header-inner {
-      display: flex;
-      align-items: center;
-      gap: var(--space-3);
-    }
-
-    .modal-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: var(--radius-lg);
-      background: var(--bg-accent-weak);
-      color: var(--fg-accent);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-    }
-
-    .modal-title {
-      font-size: var(--font-label-m-size);
-      font-weight: 500;
-      color: var(--fg-default);
-    }
-
-    .modal-subtitle {
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-      margin-top: 2px;
-    }
-
-    .modal-close {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius-lg);
-      border: none;
-      background: transparent;
-      color: var(--fg-weak);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      transition: background 150ms, color 150ms;
-    }
-
-    .modal-close:hover { background: var(--bg-hover); color: var(--fg-default); }
-
-    .modal-actions {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--space-3);
-      padding: var(--space-4) var(--space-6);
-      border-bottom: var(--border-width-1) solid var(--border-default);
-    }
-
-    .modal-actions-right { display: flex; gap: var(--space-2); }
-
-    .modal-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--space-4) var(--space-6);
-    }
-
-    /* ─── Data table ─── */
-    .data-table-wrap {
-      border: var(--border-width-1) solid var(--border-default);
-      border-radius: var(--radius-lg);
-      overflow: auto;
-    }
-
-    .data-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: var(--font-body-xs-size);
-    }
-
-    .data-table thead {
-      background: var(--bg-alternative);
-      position: sticky;
-      top: 0;
-    }
-
-    .data-table th {
-      padding: var(--space-2) var(--space-3);
-      text-align: left;
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      color: var(--fg-weak);
-      border-bottom: var(--border-width-1) solid var(--border-default);
-      white-space: nowrap;
-    }
-
-    .data-table td {
-      padding: var(--space-2) var(--space-3);
-      color: var(--fg-default);
-      border-bottom: var(--border-width-1) solid var(--border-default);
-      vertical-align: middle;
-    }
-
-    .data-table tbody tr:last-child td { border-bottom: none; }
-    .data-table tbody tr:hover { background: var(--bg-hover); }
-
-    .data-table .mono { font-family: ui-monospace, monospace; color: var(--fg-weak); }
-
-    /* Tags inside table */
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 2px 10px;
-      border-radius: var(--radius-full);
-      font-size: 11px;
-      font-weight: 500;
-      line-height: 16px;
-    }
-
-    .tag--positive { background: var(--bg-positive-weak); color: var(--fg-positive); }
-    .tag--danger   { background: var(--bg-danger-weak);   color: var(--fg-danger); }
-    .tag--accent   { background: var(--bg-accent-weak);   color: var(--fg-accent); }
-    .tag--neutral  { background: var(--bg-neutral-weak);  color: var(--fg-default); }
-
-    .modal-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--space-3) var(--space-6);
-      border-top: var(--border-width-1) solid var(--border-default);
-      font-size: var(--font-body-xs-size);
-      color: var(--fg-weak);
-    }
-
-    .modal-footer code {
-      font-family: ui-monospace, monospace;
-      font-size: 11px;
-      color: var(--fg-accent);
-    }
-
-    /* ─── Empty / loading states ─── */
-    .state-msg {
-      padding: var(--space-12) var(--space-8);
-      text-align: center;
-      color: var(--fg-weak);
-      font-size: var(--font-body-s-size);
-    }
-
-    /* ─── Space between option groups ─── */
-    .space-y-3 > * + * { margin-top: var(--space-3); }
-    .space-y-4 > * + * { margin-top: var(--space-4); }
-
-    /* ─── Utility ─── */
-    .hidden { display: none !important; }
-
-    @media (max-width: 540px) {
-      .card { padding: var(--space-6) var(--space-5); }
-      .options-grid { grid-template-columns: 1fr; }
-      .options-grid--3col { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Weekly Pulse · Diseño Industrial y 3D</title>
+
+<link rel="stylesheet" href="./colors_and_type.css" />
+<link rel="stylesheet" href="https://unpkg.com/@tabler/icons-webfont@3/tabler-icons.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+  body{
+    font-family:var(--font-base,ui-sans-serif,system-ui,sans-serif);
+    font-size:var(--font-body-m-size,16px);
+    line-height:var(--font-body-m-lh,24px);
+    color:var(--fg-default,#102137);
+    background:var(--bg-alternative,#f5f5f5);
+    min-height:100vh;display:flex;flex-direction:column;align-items:center;
+    padding:var(--space-6,24px) var(--space-4,16px);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .shell{width:100%;max-width:680px}
+
+  /* ── Topbar ── */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);
+    background:var(--bg-default,#fff);border-radius:var(--radius-xl,12px);
+    padding:var(--space-4) var(--space-5);margin-bottom:var(--space-5);
+    box-shadow:0 1px 4px var(--color-black-a8,rgba(0,0,0,.08));
+  }
+  .topbar-brand{display:flex;align-items:center;gap:var(--space-3);min-width:0}
+  .topbar-brand img{height:26px;width:auto;flex:none}
+  .brand-divider{width:1px;height:26px;background:var(--border-default);flex:none}
+  .brand-text{min-width:0}
+  .brand-title{font:var(--font-label-m-weight,500) var(--font-label-m-size,16px)/var(--font-label-m-lh,24px) var(--font-base);white-space:nowrap}
+  .brand-sub{font-size:var(--font-body-xs-size,12px);line-height:var(--font-body-xs-lh,16px);color:var(--fg-weak);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* ── Progress ── */
+  .progress-wrap{margin-bottom:var(--space-5)}
+  .progress-meta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:var(--space-2);gap:var(--space-3)}
+  .progress-step{font-size:var(--font-label-xs-size,12px);font-weight:500;text-transform:uppercase;letter-spacing:.72px;color:var(--fg-weak)}
+  .progress-name{font-size:var(--font-label-s-size,14px);font-weight:500;color:var(--fg-accent);text-align:right}
+  .progress-track{height:4px;background:var(--color-black-a12,rgba(0,0,0,.12));border-radius:var(--radius-full,9999px);overflow:hidden}
+  .progress-fill{height:100%;background:var(--bg-accent);border-radius:var(--radius-full);transition:width .3s cubic-bezier(.2,0,0,1)}
+
+  /* ── Card ── */
+  .card{
+    background:var(--bg-default,#fff);border-radius:var(--radius-2xl,16px);
+    padding:var(--space-6) var(--space-6) var(--space-5);
+    box-shadow:0 1px 4px var(--color-black-a8,rgba(0,0,0,.08));
+  }
+  .step{display:none}
+  .step.is-active{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:var(--space-2);
+    font-size:var(--font-label-xs-size,12px);font-weight:500;text-transform:uppercase;letter-spacing:.72px;
+    padding:var(--space-1) var(--space-3);border-radius:var(--radius-full);
+    margin-bottom:var(--space-3);
+  }
+  .eyebrow--accent{background:var(--bg-accent-weak);color:var(--fg-accent)}
+  .eyebrow--neutral{background:var(--bg-neutral-weak);color:var(--fg-weak)}
+  .eyebrow--danger{background:var(--bg-danger-weak);color:var(--fg-danger)}
+  .eyebrow--positive{background:var(--bg-positive-weak);color:var(--fg-positive)}
+
+  h2.step-heading{
+    font:var(--font-title-s-weight,500) var(--font-title-s-size,24px)/var(--font-title-s-lh,32px) var(--font-brand,var(--font-base));
+    letter-spacing:var(--font-title-s-ls,-.24px);margin-bottom:var(--space-2);
+  }
+  .step-help{font-size:var(--font-body-s-size,14px);line-height:var(--font-body-s-lh,20px);color:var(--fg-weak);margin-bottom:var(--space-5)}
+
+  /* ── Fields ── */
+  .field{margin-bottom:var(--space-5)}
+  .field-label{display:block;font-size:var(--font-label-s-size,14px);font-weight:500;margin-bottom:var(--space-2)}
+  .field-label .opt{font-weight:400;color:var(--fg-weak)}
+  .field-hint{font-size:var(--font-body-xs-size,12px);line-height:var(--font-body-xs-lh,16px);color:var(--fg-weak);margin-top:var(--space-2)}
+  .field-hint--error{color:var(--fg-danger);font-weight:500}
+  .field-hint[hidden]{display:none}
+
+  .input,select.input,textarea.input{
+    width:100%;font-family:inherit;font-size:var(--font-body-m-size,16px);color:var(--fg-default);
+    background:var(--bg-default);border:var(--border-width-1,1px) solid var(--border-default);
+    border-radius:var(--component-input-radius,8px);padding:var(--space-3) var(--space-4);
+    transition:border-color .15s,box-shadow .15s;
+  }
+  textarea.input{resize:vertical;min-height:76px;line-height:var(--font-body-m-lh,24px)}
+  .input:focus{outline:none;border-color:var(--border-accent);box-shadow:0 0 0 3px var(--bg-accent-weak)}
+  .input::placeholder{color:var(--fg-weak);opacity:.85}
+  .input--error{border-color:var(--border-danger)}
+  .input--error:focus{box-shadow:0 0 0 3px var(--bg-danger-weak)}
+  select.input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:var(--space-10)}
+
+  /* ── Person cards ── */
+  .person-grid{display:grid;gap:var(--space-3);margin-bottom:var(--space-5)}
+  .person{
+    display:flex;align-items:center;gap:var(--space-4);width:100%;text-align:left;cursor:pointer;
+    background:var(--bg-default);border:var(--border-width-1,1px) solid var(--border-default);
+    border-radius:var(--radius-xl,12px);padding:var(--space-3) var(--space-4);
+    font-family:inherit;transition:border-color .15s,background .15s,box-shadow .15s;
+  }
+  .person:hover{border-color:var(--border-strong);background:var(--bg-hover)}
+  .person:focus-visible{outline:none;border-color:var(--border-accent);box-shadow:0 0 0 3px var(--bg-accent-weak)}
+  .person[aria-checked="true"]{border-color:var(--border-accent);border-width:var(--border-width-2,2px);background:var(--bg-accent-weak)}
+  .avatar{
+    width:40px;height:40px;flex:none;border-radius:var(--radius-full);
+    background:var(--bg-accent);color:var(--fg-on-accent);
+    display:flex;align-items:center;justify-content:center;
+    font-size:var(--font-label-s-size,14px);font-weight:500;
+  }
+  .person-name{font-size:var(--font-label-m-size,16px);font-weight:500}
+  .person-role{font-size:var(--font-body-xs-size,12px);color:var(--fg-weak)}
+  .person-check{margin-left:auto;color:var(--fg-accent);font-size:20px;opacity:0;transition:opacity .15s}
+  .person[aria-checked="true"] .person-check{opacity:1}
+
+  /* ── Chips (radio group) ── */
+  .chips{display:grid;gap:var(--space-2)}
+  .chips--2{grid-template-columns:repeat(2,1fr)}
+  .chips--3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:520px){.chips--2,.chips--3{grid-template-columns:1fr}}
+  .chip{
+    cursor:pointer;text-align:left;font-family:inherit;
+    background:var(--bg-default);border:var(--border-width-1,1px) solid var(--border-default);
+    border-radius:var(--radius-lg,8px);padding:var(--space-3) var(--space-4);
+    transition:border-color .15s,background .15s,box-shadow .15s;
+  }
+  .chip:hover{border-color:var(--border-strong);background:var(--bg-hover)}
+  .chip:focus-visible{outline:none;border-color:var(--border-accent);box-shadow:0 0 0 3px var(--bg-accent-weak)}
+  .chip[aria-checked="true"]{border-color:var(--border-accent);border-width:var(--border-width-2,2px);background:var(--bg-accent-weak)}
+  .chip-title{font-size:var(--font-label-s-size,14px);font-weight:500;display:block}
+  .chip-sub{font-size:var(--font-body-xs-size,12px);line-height:var(--font-body-xs-lh,16px);color:var(--fg-weak);display:block;margin-top:2px}
+  .chips--danger .chip[aria-checked="true"]{border-color:var(--border-danger);background:var(--bg-danger-weak)}
+
+  fieldset{border:0;padding:0;margin:0}
+  legend{display:block;font-size:var(--font-label-s-size,14px);font-weight:500;margin-bottom:var(--space-2);padding:0}
+  legend .opt{font-weight:400;color:var(--fg-weak)}
+
+  /* ── Week picker ── */
+  .week-row{display:flex;gap:var(--space-2);flex-wrap:wrap;align-items:center}
+  .week-row .input{flex:1;min-width:170px}
+  .week-readout{
+    margin-top:var(--space-3);padding:var(--space-3) var(--space-4);
+    background:var(--bg-alternative);border-radius:var(--radius-lg,8px);
+    font-size:var(--font-body-s-size,14px);display:flex;align-items:center;gap:var(--space-2);
+  }
+  .week-readout strong{color:var(--fg-accent)}
+
+  /* ── Projects repeater ── */
+  .proj{
+    border:var(--border-width-1,1px) solid var(--border-default);border-radius:var(--radius-xl,12px);
+    padding:var(--space-4);margin-bottom:var(--space-3);background:var(--bg-default);
+  }
+  .proj-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);margin-bottom:var(--space-3)}
+  .proj-idx{font-size:var(--font-label-xs-size,12px);font-weight:500;text-transform:uppercase;letter-spacing:.72px;color:var(--fg-weak)}
+  .proj-del{
+    background:none;border:0;cursor:pointer;color:var(--fg-weak);font-size:18px;line-height:1;
+    padding:var(--space-1);border-radius:var(--radius-sm);font-family:inherit;
+  }
+  .proj-del:hover{color:var(--fg-danger);background:var(--bg-danger-weak)}
+  .proj .field{margin-bottom:var(--space-4)}
+  .proj .field:last-child{margin-bottom:0}
+
+  .empty-note{
+    border:var(--border-width-1,1px) dashed var(--border-strong);border-radius:var(--radius-xl,12px);
+    padding:var(--space-5);text-align:center;color:var(--fg-weak);
+    font-size:var(--font-body-s-size,14px);margin-bottom:var(--space-3);
+  }
+
+  /* ── Hours stepper ── */
+  .hours{display:flex;align-items:center;gap:var(--space-2)}
+  .hours-btn{
+    width:36px;height:36px;flex:none;cursor:pointer;font-family:inherit;font-size:18px;line-height:1;
+    background:var(--bg-default);border:var(--border-width-1,1px) solid var(--border-default);
+    border-radius:var(--radius-full);color:var(--fg-accent);
+    display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s;
+  }
+  .hours-btn:hover:not(:disabled){background:var(--bg-accent-weak);border-color:var(--border-accent)}
+  .hours-btn:disabled{color:var(--fg-disabled);cursor:not-allowed}
+  .hours-btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--bg-accent-weak)}
+  .hours-input{
+    width:86px;text-align:center;font-variant-numeric:tabular-nums;
+    font-size:var(--font-label-m-size,16px);font-weight:500;
+    padding:var(--space-2) var(--space-2);
+  }
+  .hours-unit{font-size:var(--font-body-s-size,14px);color:var(--fg-weak)}
+
+  /* ── Reconciliation ── */
+  .rec-rows{display:grid;gap:var(--space-2);margin-bottom:var(--space-5)}
+  .rec-row{
+    display:grid;grid-template-columns:10px 1fr auto;gap:var(--space-3);align-items:center;
+    padding:var(--space-3);border-radius:var(--radius-lg,8px);background:var(--bg-alternative);
+  }
+  .rec-row--locked{background:var(--bg-accent-weak)}
+  .rec-swatch{width:10px;height:10px;border-radius:var(--radius-full)}
+  .rec-label{font-size:var(--font-label-s-size,14px);font-weight:500}
+  .rec-hint{font-size:var(--font-body-xs-size,12px);line-height:var(--font-body-xs-lh,16px);color:var(--fg-weak);margin-top:2px}
+  .rec-locked-val{font-size:var(--font-label-m-size,16px);font-weight:500;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .rec-locked-val .u{font-size:var(--font-body-s-size,14px);font-weight:400;color:var(--fg-weak)}
+
+  .balance{
+    border-radius:var(--radius-xl,12px);padding:var(--space-4);
+    border:var(--border-width-1,1px) solid var(--border-default);background:var(--bg-alternative);
+    position:sticky;bottom:var(--space-4);
+  }
+  .balance-top{display:flex;justify-content:space-between;align-items:baseline;gap:var(--space-3);margin-bottom:var(--space-3)}
+  .balance-msg{font-size:var(--font-label-s-size,14px);font-weight:500;display:flex;align-items:center;gap:var(--space-2)}
+  .balance-count{font-size:var(--font-body-s-size,14px);color:var(--fg-weak);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .balance-bar{height:12px;border-radius:var(--radius-full);overflow:hidden;background:var(--color-black-a12,rgba(0,0,0,.12));display:flex}
+  .balance-seg{height:100%;transition:width .25s cubic-bezier(.2,0,0,1)}
+  .balance--ok{border-color:var(--border-positive);background:var(--bg-positive-weak)}
+  .balance--ok .balance-msg{color:var(--fg-positive)}
+  .balance--over{border-color:var(--border-danger);background:var(--bg-danger-weak)}
+  .balance--over .balance-msg{color:var(--fg-danger)}
+  .balance--under .balance-msg{color:var(--fg-warning)}
+  .balance-fix{
+    margin-top:var(--space-3);background:none;border:0;padding:0;cursor:pointer;font-family:inherit;
+    font-size:var(--font-body-s-size,14px);font-weight:500;color:var(--fg-accent);text-decoration:underline;
+  }
+  .balance-fix[hidden]{display:none}
+
+  /* ── Buttons ── */
+  .actions{display:flex;gap:var(--space-3);margin-top:var(--space-6);flex-wrap:wrap}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);cursor:pointer;
+    font-family:inherit;font-size:var(--font-label-s-size,14px);font-weight:500;
+    padding:var(--space-3) var(--space-5);border-radius:var(--component-button-radius,9999px);
+    border:var(--border-width-1,1px) solid transparent;transition:background .15s,border-color .15s,opacity .15s;
+  }
+  .btn:focus-visible{outline:none;box-shadow:0 0 0 3px var(--bg-accent-weak)}
+  .btn--primary{background:var(--bg-accent);color:var(--fg-on-accent)}
+  .btn--primary:hover:not(:disabled){background:var(--bg-accent-hover)}
+  .btn--secondary{background:var(--bg-default);color:var(--fg-default);border-color:var(--border-default)}
+  .btn--secondary:hover:not(:disabled){background:var(--bg-hover);border-color:var(--border-strong)}
+  .btn--ghost{background:none;color:var(--fg-accent);padding-left:var(--space-3);padding-right:var(--space-3)}
+  .btn--ghost:hover:not(:disabled){background:var(--bg-accent-weak)}
+  .btn--block{width:100%}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn-spacer{flex:1}
+  .btn--icon{
+    background:none;border:var(--border-width-1,1px) solid var(--border-default);cursor:pointer;font-family:inherit;
+    display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--space-2) var(--space-3);
+    border-radius:var(--radius-full);font-size:var(--font-label-xs-size,12px);font-weight:500;color:var(--fg-default);
+  }
+  .btn--icon:hover{background:var(--bg-hover)}
+
+  /* ── Summary ── */
+  .summary{border:var(--border-width-1,1px) solid var(--border-default);border-radius:var(--radius-xl,12px);overflow:hidden;margin-bottom:var(--space-4)}
+  .summary-head{
+    padding:var(--space-3) var(--space-4);background:var(--bg-alternative);
+    font-size:var(--font-label-s-size,14px);font-weight:500;
+    border-bottom:var(--border-width-1,1px) solid var(--border-default);
+  }
+  .summary-row{
+    display:grid;grid-template-columns:minmax(120px,38%) 1fr;gap:var(--space-3);
+    padding:var(--space-3) var(--space-4);border-bottom:var(--border-width-1,1px) solid var(--border-default);
+    font-size:var(--font-body-s-size,14px);align-items:start;
+  }
+  .summary-row:last-child{border-bottom:0}
+  .summary-k{color:var(--fg-weak)}
+  .summary-v{font-weight:500;word-break:break-word}
+  .summary-v .muted{font-weight:400;color:var(--fg-weak)}
+  .pill{display:inline-block;padding:2px var(--space-3);border-radius:var(--radius-full);font-size:var(--font-body-xs-size,12px);font-weight:500}
+  .pill--ok{background:var(--bg-positive-weak);color:var(--fg-positive)}
+  .pill--warn{background:var(--bg-danger-weak);color:var(--fg-danger)}
+
+  /* ── Alerts ── */
+  .alert{
+    display:flex;gap:var(--space-3);align-items:flex-start;
+    padding:var(--space-3) var(--space-4);border-radius:var(--radius-lg,8px);
+    font-size:var(--font-body-s-size,14px);line-height:var(--font-body-s-lh,20px);margin-bottom:var(--space-4);
+  }
+  .alert i{flex:none;font-size:18px;line-height:20px}
+  .alert--info{background:var(--bg-accent-weak);color:var(--fg-accent)}
+  .alert--warn{background:var(--bg-warning-weak);color:var(--fg-warning)}
+  .alert--danger{background:var(--bg-danger-weak);color:var(--fg-danger)}
+  .alert[hidden]{display:none}
+  .alert-act{background:none;border:0;padding:0;cursor:pointer;font-family:inherit;font-weight:500;color:inherit;text-decoration:underline;font-size:inherit}
+
+  /* ── Success / error screens ── */
+  .final{text-align:center;padding:var(--space-6) var(--space-2)}
+  .final-icon{
+    width:64px;height:64px;border-radius:var(--radius-full);margin:0 auto var(--space-5);
+    display:flex;align-items:center;justify-content:center;font-size:32px;
+  }
+  .final-icon--ok{background:var(--bg-accent);color:var(--fg-on-accent)}
+  .final-icon--bad{background:var(--bg-danger);color:var(--fg-on-danger)}
+  .final h2{
+    font:var(--font-title-s-weight,500) var(--font-title-s-size,24px)/var(--font-title-s-lh,32px) var(--font-brand,var(--font-base));
+    margin-bottom:var(--space-3);
+  }
+  .final p{font-size:var(--font-body-s-size,14px);line-height:var(--font-body-s-lh,20px);color:var(--fg-weak);max-width:44ch;margin:0 auto var(--space-6)}
+  .final .actions{justify-content:center}
+
+  .spinner{
+    width:14px;height:14px;border:2px solid var(--color-white-a40,rgba(255,255,255,.4));
+    border-top-color:#fff;border-radius:var(--radius-full);animation:spin .7s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ti-loader{animation:spin 1s linear infinite;display:inline-block}
+
+  /* ── Modal ── */
+  .overlay{
+    position:fixed;inset:0;background:var(--bg-overlay,rgba(0,0,0,.4));
+    display:none;align-items:center;justify-content:center;padding:var(--space-4);z-index:50;
+  }
+  .overlay.is-open{display:flex}
+  .modal{
+    background:var(--bg-default);border-radius:var(--component-dialog-radius,16px);
+    width:100%;max-width:960px;max-height:88vh;display:flex;flex-direction:column;
+    box-shadow:var(--shadow-overlay,0 8px 32px rgba(0,0,0,.12));
+  }
+  .modal-head{
+    padding:var(--space-5) var(--space-6);border-bottom:var(--border-width-1,1px) solid var(--border-default);
+    display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4);
+  }
+  .modal-title{font:var(--font-label-l-weight,500) var(--font-label-l-size,18px)/var(--font-label-l-lh,24px) var(--font-base);display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap}
+  .modal-sub{font-size:var(--font-body-xs-size,12px);color:var(--fg-weak);margin-top:var(--space-1)}
+  .tag{padding:2px var(--space-3);border-radius:var(--component-tag-radius,9999px);background:var(--bg-positive-weak);color:var(--fg-positive);font-size:var(--font-body-xs-size,12px);font-weight:500}
+  .modal-close{background:none;border:0;cursor:pointer;font-size:22px;line-height:1;color:var(--fg-weak);padding:var(--space-1);border-radius:var(--radius-sm);font-family:inherit}
+  .modal-close:hover{color:var(--fg-default);background:var(--bg-hover)}
+  .modal-tools{padding:var(--space-4) var(--space-6);display:flex;gap:var(--space-2);flex-wrap:wrap;border-bottom:var(--border-width-1,1px) solid var(--border-default)}
+  .modal-body{padding:var(--space-4) var(--space-6);overflow:auto;flex:1}
+  .modal-foot{
+    padding:var(--space-3) var(--space-6);border-top:var(--border-width-1,1px) solid var(--border-default);
+    display:flex;justify-content:space-between;gap:var(--space-3);flex-wrap:wrap;
+    font-size:var(--font-body-xs-size,12px);color:var(--fg-weak);
+  }
+  .modal-foot code{font-family:ui-monospace,monospace}
+
+  table.data{width:100%;border-collapse:collapse;font-size:var(--font-body-xs-size,12px)}
+  table.data th{
+    text-align:left;padding:var(--space-2) var(--space-3);color:var(--fg-weak);font-weight:500;
+    border-bottom:var(--border-width-1,1px) solid var(--border-default);white-space:nowrap;
+  }
+  table.data td{padding:var(--space-2) var(--space-3);border-bottom:var(--border-width-1,1px) solid var(--border-default);vertical-align:top}
+  table.data td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .table-scroll{overflow-x:auto}
+  .state-msg{padding:var(--space-8) var(--space-4);text-align:center;color:var(--fg-weak);font-size:var(--font-body-s-size,14px)}
+  .state-msg[hidden]{display:none}
+
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
 </head>
-
 <body>
-  <div class="shell">
 
-    <!-- ─── TOP BAR ─── -->
-    <header class="topbar">
-      <div class="topbar-brand">
-        <img src="./assets/logo-palace-default.svg" alt="Palace Resorts" class="topbar-logo" />
-        <div class="topbar-divider"></div>
-        <div>
-          <div class="topbar-title">Weekly Pulse</div>
-          <div class="topbar-sub">Check-in de Impacto · Equipo de Diseño</div>
-        </div>
-      </div>
+<div class="shell">
 
-      <button id="btnAdminModal" class="admin-btn">
-        <span class="live-dot"></span>
-        <i class="ti ti-database"></i>
-        <span>Historial · D1</span>
-      </button>
-    </header>
-
-    <!-- ─── PROGRESS ─── -->
-    <div id="progressContainer" class="progress-wrap">
-      <div class="progress-meta">
-        <span id="stepLabel" class="progress-label">Paso 1 de 5</span>
-        <span id="stepTitleHint" class="progress-hint">Identificación</span>
-      </div>
-      <div class="progress-track">
-        <div id="progressBar" class="progress-fill"></div>
+  <!-- ══ Topbar ══ -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      <img src="./assets/logo-palace-default.svg" alt="Palace Resorts" />
+      <div class="brand-divider" aria-hidden="true"></div>
+      <div class="brand-text">
+        <div class="brand-title">Weekly Pulse</div>
+        <div class="brand-sub">Diseño Industrial y 3D</div>
       </div>
     </div>
+    <button type="button" class="btn--icon" id="btnHistory">
+      <i class="ti ti-database" aria-hidden="true"></i> Historial
+    </button>
+  </div>
 
-    <!-- ─── MAIN CARD ─── -->
-    <main>
-      <div class="card">
-
-        <!-- STEP 0: Selección de Diseñador -->
-        <div class="step-card" id="step-0">
-          <div class="eyebrow-tag eyebrow-tag--neutral">
-            <i class="ti ti-user-check" style="font-size:13px;"></i>
-            Check-in semanal
-          </div>
-          <h2 class="step-heading">Hola, equipo creativo</h2>
-          <p class="step-body">
-            Selecciona tu nombre para comenzar tu resumen semanal de
-            <strong style="color: var(--fg-default); font-weight: 500;">3 minutos</strong>.
-          </p>
-
-          <div class="space-y-3" id="designerGroup">
-
-            <button type="button" onclick="selectDesigner(this, 'Homero Hernandez Morales')" class="designer-card">
-              <div class="designer-inner">
-                <div class="designer-avatar">HH</div>
-                <div>
-                  <div class="designer-name">Homero Hernandez Morales</div>
-                  <div class="designer-role">Equipo de Diseño</div>
-                </div>
-              </div>
-              <i class="ti ti-chevron-right designer-chevron"></i>
-            </button>
-
-            <button type="button" onclick="selectDesigner(this, 'Maria Esther Mendoza Franco')" class="designer-card">
-              <div class="designer-inner">
-                <div class="designer-avatar">ME</div>
-                <div>
-                  <div class="designer-name">Maria Esther Mendoza Franco</div>
-                  <div class="designer-role">Equipo de Diseño</div>
-                </div>
-              </div>
-              <i class="ti ti-chevron-right designer-chevron"></i>
-            </button>
-
-            <button type="button" onclick="selectDesigner(this, 'Michelle Pous Alarcon')" class="designer-card">
-              <div class="designer-inner">
-                <div class="designer-avatar">MP</div>
-                <div>
-                  <div class="designer-name">Michelle Pous Alarcon</div>
-                  <div class="designer-role">Equipo de Diseño</div>
-                </div>
-              </div>
-              <i class="ti ti-chevron-right designer-chevron"></i>
-            </button>
-
-          </div>
-
-          <input type="hidden" id="designerName" value="" />
-          <input type="hidden" id="weekDate" value="" />
-        </div>
-
-        <!-- STEP 1: Proyecto Estrella -->
-        <div class="step-card hidden" id="step-1">
-          <div class="eyebrow-tag eyebrow-tag--accent">
-            <i class="ti ti-star" style="font-size:13px;"></i>
-            Sección 1 de 4
-          </div>
-          <h2 class="step-heading">Tu proyecto estrella de la semana</h2>
-          <p class="step-body">
-            El proyecto más relevante, retador o donde aportaste una solución o valor especial.
-          </p>
-
-          <div class="space-y-4">
-            <div class="field">
-              <label class="field-label" for="starProjectName">Nombre del proyecto o solicitud principal</label>
-              <input
-                type="text"
-                id="starProjectName"
-                class="input"
-                placeholder="Campaña Navidad 2026, Menús Restaurante Jade, Rebranding SPA…"
-              />
-            </div>
-
-            <div class="field">
-              <label class="field-label" for="starProjectValue">¿Qué aportaste de nuevo o diferente?</label>
-              <textarea
-                id="starProjectValue"
-                rows="3"
-                class="input"
-                placeholder="Se propuso nuevo layout más limpio que redujo el tiempo de lectura, se creó plantilla escalable…"
-              ></textarea>
-            </div>
-
-            <div class="field">
-              <label class="field-label">
-                Tiempo invertido en este proyecto
-                <span class="field-label-weak"> (Jornada: 48 h)</span>
-              </label>
-              <div class="options-grid" id="starTimeGroup">
-                <button type="button" data-val="< 8 hrs (Puntual)" onclick="selectOption(this,'starTime')" class="option-pill">
-                  <div class="option-pill-title">Puntual (&lt; 8 h)</div>
-                  <div class="option-pill-sub">~1 día o apoyo rápido</div>
-                </button>
-                <button type="button" data-val="8 a 18 hrs (Parcial)" onclick="selectOption(this,'starTime')" class="option-pill">
-                  <div class="option-pill-title">Parcial (8 a 18 h)</div>
-                  <div class="option-pill-sub">~1.5 a 2 días de trabajo</div>
-                </button>
-                <button type="button" data-val="18 a 30 hrs (Principal)" onclick="selectOption(this,'starTime')" class="option-pill active">
-                  <div class="option-pill-title">Principal (18 a 30 h)</div>
-                  <div class="option-pill-sub">~2.5 a 3.5 días dedicados</div>
-                </button>
-                <button type="button" data-val="+30 hrs (Full Focus)" onclick="selectOption(this,'starTime')" class="option-pill">
-                  <div class="option-pill-title">Full Focus (+30 h)</div>
-                  <div class="option-pill-sub">Prácticamente toda la semana</div>
-                </button>
-              </div>
-              <input type="hidden" id="starTime" value="18 a 30 hrs (Principal)" />
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button type="button" onclick="nextStep(0)" class="btn btn--ghost">
-              <i class="ti ti-arrow-left"></i> Atrás
-            </button>
-            <button type="button" onclick="nextStep(2)" class="btn btn--primary">
-              Siguiente <i class="ti ti-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 2: Operación y Rutina -->
-        <div class="step-card hidden" id="step-2">
-          <div class="eyebrow-tag eyebrow-tag--neutral">
-            <i class="ti ti-layers-subtract" style="font-size:13px;"></i>
-            Sección 2 de 4
-          </div>
-          <h2 class="step-heading">Operación del día a día</h2>
-          <p class="step-body">
-            Registro de tiempo invertido en solicitudes rutinarias (letreros, ajustes menores, adaptaciones de formatos).
-          </p>
-
-          <div class="space-y-4">
-            <div class="field">
-              <label class="field-label" for="routineTasks">1 o 2 ejemplos representativos de lo que hiciste</label>
-              <textarea
-                id="routineTasks"
-                rows="3"
-                class="input"
-                placeholder="1. Adaptación de letreros para buffet. 2. Cambios de logos en uniformes."
-              ></textarea>
-            </div>
-
-            <div class="field">
-              <label class="field-label">¿Cuánto tiempo se te fue en esta rutina?</label>
-              <div class="options-grid" id="routineTimeGroup">
-                <button type="button" data-val="Baja (< 10 hrs | < 25%)" onclick="selectOption(this,'routineTime')" class="option-pill">
-                  <div class="option-pill-title">Baja (&lt; 10 h)</div>
-                  <div class="option-pill-sub">&lt; 25% del tiempo semanal</div>
-                </button>
-                <button type="button" data-val="Balanceada (10 a 20 hrs | 25%-50%)" onclick="selectOption(this,'routineTime')" class="option-pill active">
-                  <div class="option-pill-title">Balanceada (10 a 20 h)</div>
-                  <div class="option-pill-sub">25% – 50% de la jornada</div>
-                </button>
-                <button type="button" data-val="Alta Demanda (20 a 30 hrs | 50%-75%)" onclick="selectOption(this,'routineTime')" class="option-pill">
-                  <div class="option-pill-title">Alta Demanda (20 a 30 h)</div>
-                  <div class="option-pill-sub">50% – 75% (mucha maquila)</div>
-                </button>
-                <button type="button" data-val="Bomberazos (+30 hrs | > 75%)" onclick="selectOption(this,'routineTime')" class="option-pill">
-                  <div class="option-pill-title">Bomberazos (+30 h)</div>
-                  <div class="option-pill-sub">&gt; 75% apagando fuegos</div>
-                </button>
-              </div>
-              <input type="hidden" id="routineTime" value="Balanceada (10 a 20 hrs | 25%-50%)" />
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button type="button" onclick="nextStep(1)" class="btn btn--ghost">
-              <i class="ti ti-arrow-left"></i> Atrás
-            </button>
-            <button type="button" onclick="nextStep(3)" class="btn btn--primary">
-              Siguiente <i class="ti ti-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 3: Incidencias & Retrabajos -->
-        <div class="step-card hidden" id="step-3">
-          <div class="eyebrow-tag eyebrow-tag--danger">
-            <i class="ti ti-alert-triangle" style="font-size:13px;"></i>
-            Sección 3 de 4
-          </div>
-          <h2 class="step-heading">Fricciones, retrabajos y costos</h2>
-          <p class="step-body">
-            Identifiquemos cuellos de botella (cambios de brief extemporáneos, mermas o fallas de proveedor) para solicitar mejoras en Gerencia.
-          </p>
-
-          <div class="space-y-4">
-            <div class="field">
-              <label class="field-label">¿Se presentó algún retrabajo o error esta semana?</label>
-              <div class="options-grid" id="incidentToggle" style="margin-top: var(--space-2);">
-                <button type="button" id="btnIncidentNo" onclick="setIncidentMode(false)" class="option-pill active" style="text-align:center;">
-                  <div style="font-size:20px; margin-bottom:4px;"><i class="ti ti-rocket"></i></div>
-                  <div class="option-pill-title">Todo fluyó limpio</div>
-                  <div class="option-pill-sub">Sin retrabajos</div>
-                </button>
-                <button type="button" id="btnIncidentYes" onclick="setIncidentMode(true)" class="option-pill" style="text-align:center;">
-                  <div style="font-size:20px; margin-bottom:4px; color: var(--fg-warning);"><i class="ti ti-alert-triangle"></i></div>
-                  <div class="option-pill-title">Hubo fricción / error</div>
-                  <div class="option-pill-sub">Requirió retrabajo</div>
-                </button>
-              </div>
-              <input type="hidden" id="hasIncident" value="No" />
-            </div>
-
-            <!-- Conditional: incident details -->
-            <div id="incidentDetailsBlock" class="incident-block hidden">
-              <div class="field">
-                <label class="field-label" style="color: var(--fg-danger);">Causa principal del retrabajo</label>
-                <select id="incidentCause" class="select">
-                  <option value="Cambio de solicitud/brief extemporáneo">Cambio de solicitud/brief extemporáneo por cliente interno</option>
-                  <option value="Información o medidas incorrectas de origen">Información o medidas incorrectas en el brief inicial</option>
-                  <option value="Falla o retraso en proveedor de impresión/producción">Falla o retraso en proveedor de impresión/producción</option>
-                  <option value="Error de diseño / arte interno">Error de diseño / arte interno</option>
-                  <option value="Otro motivo">Otro motivo</option>
-                </select>
-              </div>
-
-              <div class="field" style="margin-top: var(--space-3);">
-                <label class="field-label" style="color: var(--fg-danger);">Breve descripción de lo sucedido</label>
-                <input
-                  type="text"
-                  id="incidentDescription"
-                  class="input"
-                  placeholder="Se mandó a imprimir letrero pero solicitaron cambiar precios al día siguiente…"
-                />
-              </div>
-
-              <div class="field" style="margin-top: var(--space-3);">
-                <label class="field-label" style="color: var(--fg-danger);">¿Generó costo extra de dinero o merma de material?</label>
-                <div class="options-grid options-grid--3col" id="costImpactGroup" style="margin-top: var(--space-2);">
-                  <button type="button" data-val="No (Solo tiempo de diseño)" onclick="selectOption(this,'costImpact')" class="option-pill active">
-                    <div class="option-pill-title">No (solo tiempo)</div>
-                  </button>
-                  <button type="button" data-val="Sí (Reimpresión/Proveedor)" onclick="selectOption(this,'costImpact')" class="option-pill">
-                    <div class="option-pill-title">Sí (reimpresión/gasto)</div>
-                  </button>
-                  <button type="button" data-val="Por determinar" onclick="selectOption(this,'costImpact')" class="option-pill">
-                    <div class="option-pill-title">Por determinar</div>
-                  </button>
-                </div>
-                <input type="hidden" id="costImpact" value="No (Solo tiempo de diseño)" />
-              </div>
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button type="button" onclick="nextStep(2)" class="btn btn--ghost">
-              <i class="ti ti-arrow-left"></i> Atrás
-            </button>
-            <button type="button" onclick="nextStep(4)" class="btn btn--primary">
-              Siguiente <i class="ti ti-arrow-right"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 4: Innovación & Cierre -->
-        <div class="step-card hidden" id="step-4">
-          <div class="eyebrow-tag eyebrow-tag--positive">
-            <i class="ti ti-bulb" style="font-size:13px;"></i>
-            Sección 4 de 4
-          </div>
-          <h2 class="step-heading">Innovación y aprendizaje</h2>
-          <p class="step-body">
-            ¿Descubriste un truco, atajo, plantilla o usaste IA (Claude, Photoshop AI) que te ahorró tiempo? Presúmelo.
-          </p>
-
-          <div class="space-y-4">
-            <div class="field">
-              <label class="field-label">
-                Mejora, técnica o herramienta descubierta
-                <span class="field-label-weak"> (Opcional)</span>
-              </label>
-              <textarea
-                id="innovationNotes"
-                rows="3"
-                class="input"
-                placeholder="Creé una acción en Photoshop para exportar formatos en 1 clic; usé IA para generar fondo del spa ahorrando 2 horas…"
-              ></textarea>
-            </div>
-
-            <!-- Pre-send summary -->
-            <div class="summary-box">
-              <div class="summary-heading">Resumen de tu check-in</div>
-              <div class="summary-row">
-                <span class="summary-key">Diseñador</span>
-                <span class="summary-val" id="sumDesigner">—</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-key">Proyecto principal</span>
-                <span class="summary-val summary-val--accent" id="sumProject">—</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-key">Tiempo en proyecto</span>
-                <span class="summary-val" id="sumStarTime">—</span>
-              </div>
-              <div class="summary-row">
-                <span class="summary-key">Fricciones / Retrabajos</span>
-                <span class="summary-val summary-val--positive" id="sumIncident">Limpio</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="step-nav">
-            <button type="button" onclick="nextStep(3)" class="btn btn--ghost">
-              <i class="ti ti-arrow-left"></i> Atrás
-            </button>
-            <button type="button" id="btnSubmit" onclick="submitWeeklyPulse()" class="btn btn--primary">
-              <i class="ti ti-send"></i>
-              <span id="submitBtnText">Enviar check-in</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- STEP 5: Pantalla de éxito -->
-        <div class="step-card hidden success-screen" id="step-5">
-          <div class="success-icon">
-            <i class="ti ti-check" style="font-size:32px;"></i>
-          </div>
-          <h2 class="success-title">Registro guardado</h2>
-          <p class="success-body">
-            Tu reporte semanal quedó registrado en la base de datos central de Cloudflare D1.
-            Gracias por visibilizar tu esfuerzo — que tengas un excelente fin de semana.
-          </p>
-          <div class="success-actions">
-            <button type="button" onclick="resetForm()" class="btn btn--secondary">
-              Llenar otro registro
-            </button>
-            <button type="button" onclick="openAdminModal()" class="btn btn--primary">
-              <i class="ti ti-database"></i>
-              Ver base de datos D1
-            </button>
-          </div>
-        </div>
-
-      </div><!-- /card -->
-    </main>
-
-  </div><!-- /shell -->
-
-  <!-- ─── MODAL: HISTORIAL & EXPORTADOR D1 ─── -->
-  <div id="adminModal" class="modal-overlay hidden">
-    <div class="modal-panel">
-
-      <div class="modal-header">
-        <div class="modal-header-inner">
-          <div class="modal-icon">
-            <i class="ti ti-database"></i>
-          </div>
-          <div>
-            <div class="modal-title">
-              Base de datos · Cloudflare D1
-              <span class="tag tag--positive" style="margin-left: 8px; vertical-align: middle;">
-                <span style="width:6px;height:6px;border-radius:50%;background:var(--fg-positive);display:inline-block;"></span>
-                pulse_db
-              </span>
-            </div>
-            <div class="modal-subtitle">Respuestas del equipo almacenadas en la nube 24/7</div>
-          </div>
-        </div>
-        <button onclick="closeAdminModal()" class="modal-close" aria-label="Cerrar">
-          <i class="ti ti-x"></i>
-        </button>
-      </div>
-
-      <div class="modal-actions">
-        <button onclick="fetchD1Records()" class="btn btn--secondary btn--sm">
-          <i class="ti ti-refresh"></i>
-          Actualizar datos
-        </button>
-        <div class="modal-actions-right">
-          <a href="/api/export-csv" target="_blank" class="btn btn--primary btn--sm">
-            <i class="ti ti-file-spreadsheet"></i>
-            Descargar CSV
-          </a>
-          <button onclick="generateClaudePromptFromD1()" class="btn btn--secondary btn--sm">
-            <i class="ti ti-robot"></i>
-            Copiar prompt para Claude
-          </button>
-        </div>
-      </div>
-
-      <div class="modal-body">
-        <div class="data-table-wrap">
-          <table class="data-table">
-            <thead>
-              <tr>
-                <th>Fecha</th>
-                <th>Diseñador</th>
-                <th>Proyecto clave</th>
-                <th>Horas proy.</th>
-                <th>Horas rutina</th>
-                <th>Incidencia</th>
-              </tr>
-            </thead>
-            <tbody id="dataTableBody"></tbody>
-          </table>
-          <div id="loadingMsg" class="state-msg">
-            <i class="ti ti-loader" style="font-size:20px; display:block; margin-bottom:8px;"></i>
-            Cargando registros desde Cloudflare D1…
-          </div>
-          <div id="noDataMsg" class="state-msg hidden">
-            No hay registros en la base de datos todavía.<br>
-            Completa el primer check-in para verlo aquí.
-          </div>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <span id="totalRecordsLabel">0 registros en Cloudflare D1</span>
-        <span>Endpoint: <code>/api/responses</code></span>
-      </div>
-
+  <!-- ══ Progress ══ -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-meta">
+      <span class="progress-step" id="progressStep">Paso 1 de 5</span>
+      <span class="progress-name" id="progressName">Identificación</span>
+    </div>
+    <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="5" aria-valuenow="1" aria-label="Avance del cuestionario">
+      <div class="progress-fill" id="progressFill" style="width:20%"></div>
     </div>
   </div>
 
-  <!-- ─── JAVASCRIPT (lógica preservada intacta) ─── -->
-  <script>
-    // Auto-compute current date
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
-    document.getElementById('weekDate').value = formattedDate;
+  <div class="card">
 
-    let currentStep = 0;
-    const totalSteps = 4;
-    const stepTitles = [
-      "Identificación",
-      "Proyecto estrella",
-      "Operación & Rutina",
-      "Incidencias & Retrabajos",
-      "Innovación & Cierre"
-    ];
+    <!-- ══════════ PASO 0 · Identificación ══════════ -->
+    <section class="step is-active" id="step-0" aria-labelledby="h-0">
+      <span class="eyebrow eyebrow--neutral"><i class="ti ti-user-check" aria-hidden="true"></i> Check-in semanal</span>
+      <h2 class="step-heading" id="h-0">¿Quién reporta y qué semana?</h2>
+      <p class="step-help">Toma <strong>3 a 4 minutos</strong>. Al final vas a repartir tus horas de la semana, así que ten presente en qué se te fue el tiempo.</p>
 
-    let cachedD1Data = [];
+      <div class="alert alert--info" id="draftAlert" hidden>
+        <i class="ti ti-history" aria-hidden="true"></i>
+        <div>
+          Encontramos un borrador sin enviar de <strong id="draftWhen">—</strong>.
+          <button type="button" class="alert-act" id="draftRestore">Retomarlo</button> ·
+          <button type="button" class="alert-act" id="draftDiscard">Empezar de cero</button>
+        </div>
+      </div>
 
-    function selectDesigner(card, name) {
-      const allCards = document.querySelectorAll('.designer-card');
-      allCards.forEach(c => c.classList.remove('active'));
-      card.classList.add('active');
-      document.getElementById('designerName').value = name;
+      <fieldset class="field">
+        <legend>Diseñador</legend>
+        <div class="person-grid" id="personGrid" role="radiogroup" aria-label="Diseñador"></div>
+        <p class="field-hint field-hint--error" id="err-designer" hidden>Selecciona quién reporta.</p>
+      </fieldset>
 
-      setTimeout(() => {
-        nextStep(1);
-      }, 200);
-    }
+      <div class="field">
+        <label class="field-label" for="anyDayOfWeek">Semana que reportas</label>
+        <div class="week-row">
+          <input type="date" id="anyDayOfWeek" class="input" />
+          <button type="button" class="btn btn--secondary" id="btnThisWeek">Esta semana</button>
+          <button type="button" class="btn btn--secondary" id="btnLastWeek">Semana pasada</button>
+        </div>
+        <div class="week-readout" id="weekReadout">
+          <i class="ti ti-calendar-week" aria-hidden="true"></i>
+          <span>Selecciona cualquier día de la semana que quieres reportar.</span>
+        </div>
+        <p class="field-hint">Elige cualquier día dentro de esa semana; nosotros calculamos la semana completa (lunes a domingo).</p>
+        <p class="field-hint field-hint--error" id="err-week" hidden>Indica la semana que estás reportando.</p>
+      </div>
 
-    function nextStep(stepIndex) {
-      if (currentStep === 0 && stepIndex === 1) {
-        const name = document.getElementById('designerName').value.trim();
-        if (!name) {
-          alert("Por favor selecciona tu nombre.");
-          return;
-        }
-      }
+      <div class="alert alert--warn" id="dupAlert" hidden>
+        <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+        <div id="dupText">Ya existe un registro para esta persona en esta semana. Si continúas, se reemplazará.</div>
+      </div>
 
-      for (let i = 0; i <= 5; i++) {
-        const el = document.getElementById(`step-${i}`);
-        if (el) el.classList.add('hidden');
-      }
+      <div class="actions">
+        <div class="btn-spacer"></div>
+        <button type="button" class="btn btn--primary" data-goto="1">Continuar <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </section>
 
-      const target = document.getElementById(`step-${stepIndex}`);
-      if (target) {
-        target.classList.remove('hidden');
-        currentStep = stepIndex;
-      }
+    <!-- ══════════ PASO 1 · Proyectos ══════════ -->
+    <section class="step" id="step-1" aria-labelledby="h-1">
+      <span class="eyebrow eyebrow--accent"><i class="ti ti-star" aria-hidden="true"></i> Sección 1 de 4</span>
+      <h2 class="step-heading" id="h-1">Proyectos que trabajaste</h2>
+      <p class="step-help">Registra los proyectos con nombre propio de esta semana y las horas que le dedicaste a cada uno. Lo que no sea atribuible a un proyecto específico lo capturas en el siguiente paso.</p>
 
-      if (stepIndex <= totalSteps) {
-        document.getElementById('progressContainer').classList.remove('hidden');
-        document.getElementById('stepLabel').innerText = `Paso ${stepIndex + 1} de ${totalSteps + 1}`;
-        document.getElementById('stepTitleHint').innerText = stepTitles[stepIndex];
-        const pct = ((stepIndex + 1) / (totalSteps + 1)) * 100;
-        document.getElementById('progressBar').style.width = `${pct}%`;
-      } else {
-        document.getElementById('progressContainer').classList.add('hidden');
-      }
+      <div id="projList"></div>
 
-      if (stepIndex === 4) {
-        document.getElementById('sumDesigner').innerText = document.getElementById('designerName').value || "Anónimo";
-        document.getElementById('sumProject').innerText = document.getElementById('starProjectName').value || "Operación regular";
-        document.getElementById('sumStarTime').innerText = document.getElementById('starTime').value;
-        const hasInc = document.getElementById('hasIncident').value === "Sí";
-        const sumIncEl = document.getElementById('sumIncident');
-        if (hasInc) {
-          sumIncEl.innerText = "Con incidencia";
-          sumIncEl.className = "summary-val summary-val--danger";
-        } else {
-          sumIncEl.innerText = "Limpio";
-          sumIncEl.className = "summary-val summary-val--positive";
-        }
-      }
+      <div class="empty-note" id="projEmpty" hidden>
+        Esta semana no tuviste proyectos con nombre propio. Perfecto — se registrará como semana de operación.
+      </div>
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+      <div class="actions" style="margin-top:var(--space-3)">
+        <button type="button" class="btn btn--secondary" id="btnAddProj">
+          <i class="ti ti-plus" aria-hidden="true"></i> Agregar proyecto
+        </button>
+        <button type="button" class="btn btn--ghost" id="btnNoProj">Esta semana fue solo operación</button>
+      </div>
 
-    function selectOption(btn, targetInputId) {
-      const parent = btn.parentElement;
-      const buttons = parent.querySelectorAll('.option-pill');
-      buttons.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(targetInputId).value = btn.getAttribute('data-val');
-    }
+      <p class="field-hint field-hint--error" id="err-proj" hidden style="margin-top:var(--space-3)">Completa el nombre y las horas de cada proyecto, o elimínalo.</p>
 
-    function setIncidentMode(hasIncident) {
-      const btnNo = document.getElementById('btnIncidentNo');
-      const btnYes = document.getElementById('btnIncidentYes');
-      const details = document.getElementById('incidentDetailsBlock');
-      const input = document.getElementById('hasIncident');
+      <div class="actions">
+        <button type="button" class="btn btn--secondary" data-goto="0"><i class="ti ti-arrow-left" aria-hidden="true"></i> Atrás</button>
+        <div class="btn-spacer"></div>
+        <button type="button" class="btn btn--primary" data-goto="2">Continuar <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </section>
 
-      if (hasIncident) {
-        btnYes.classList.add('active');
-        btnNo.classList.remove('active');
-        details.classList.remove('hidden');
-        input.value = "Sí";
-      } else {
-        btnNo.classList.add('active');
-        btnYes.classList.remove('active');
-        details.classList.add('hidden');
-        input.value = "No";
-      }
-    }
+    <!-- ══════════ PASO 2 · Reparto de la semana ══════════ -->
+    <section class="step" id="step-2" aria-labelledby="h-2">
+      <span class="eyebrow eyebrow--neutral"><i class="ti ti-chart-pie" aria-hidden="true"></i> Sección 2 de 4</span>
+      <h2 class="step-heading" id="h-2">¿Cómo se repartió tu semana?</h2>
+      <p class="step-help">Reparte tus horas hasta que el total cuadre. No busques precisión de reloj: aproximaciones en bloques de media hora son suficientes.</p>
 
-    async function submitWeeklyPulse() {
-      const submitBtn = document.getElementById('btnSubmit');
-      const submitBtnText = document.getElementById('submitBtnText');
-      submitBtn.disabled = true;
-      submitBtnText.innerHTML = '<span class="spinner"></span> Guardando…';
+      <div class="field">
+        <label class="field-label" for="hoursAvailable">Horas disponibles esta semana</label>
+        <div class="hours">
+          <button type="button" class="hours-btn" data-avail="-4" aria-label="Restar 4 horas">−</button>
+          <input type="number" id="hoursAvailable" class="input hours-input" min="0" max="80" step="0.5" inputmode="decimal" />
+          <button type="button" class="hours-btn" data-avail="4" aria-label="Sumar 4 horas">+</button>
+          <span class="hours-unit">horas</span>
+        </div>
+        <p class="field-hint">Jornada estándar: 48 h. Ajústalo si tuviste vacaciones, permiso, incapacidad o día festivo.</p>
+      </div>
 
-      const record = {
-        id: 'rec_' + Date.now(),
-        submittedAt: new Date().toISOString(),
-        weekDate: document.getElementById('weekDate').value,
-        designer: document.getElementById('designerName').value.trim(),
-        teamUnit: "Diseño Gráfico",
+      <div class="rec-rows" id="recRows"></div>
 
-        starProject: document.getElementById('starProjectName').value.trim() || "Operación regular",
-        starValue: document.getElementById('starProjectValue').value.trim() || "Ejecución estándar",
-        starTime: document.getElementById('starTime').value,
+      <div class="balance" id="balance">
+        <div class="balance-top">
+          <span class="balance-msg" id="balanceMsg"><i class="ti ti-minus" aria-hidden="true"></i> Empieza a repartir tus horas</span>
+          <span class="balance-count" id="balanceCount">0 de 48 h</span>
+        </div>
+        <div class="balance-bar" id="balanceBar" aria-hidden="true"></div>
+        <button type="button" class="balance-fix" id="balanceFix" hidden></button>
+        <p class="sr-only" aria-live="polite" id="balanceLive"></p>
+      </div>
 
-        routineTasks: document.getElementById('routineTasks').value.trim() || "Ajustes y adaptaciones varias",
-        routineTime: document.getElementById('routineTime').value,
+      <div class="actions">
+        <button type="button" class="btn btn--secondary" data-goto="1"><i class="ti ti-arrow-left" aria-hidden="true"></i> Atrás</button>
+        <div class="btn-spacer"></div>
+        <button type="button" class="btn btn--primary" data-goto="3">Continuar <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </section>
 
-        hasIncident: document.getElementById('hasIncident').value,
-        incidentCause: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentCause').value : "N/A",
-        incidentDescription: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('incidentDescription').value.trim() : "N/A",
-        costImpact: document.getElementById('hasIncident').value === "Sí" ? document.getElementById('costImpact').value : "No aplica",
+    <!-- ══════════ PASO 3 · Retrabajo ══════════ -->
+    <section class="step" id="step-3" aria-labelledby="h-3">
+      <span class="eyebrow eyebrow--danger"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Sección 3 de 4</span>
+      <h2 class="step-heading" id="h-3">Detalle del retrabajo</h2>
+      <p class="step-help">Reportaste <strong id="reworkHrsEcho">0 h</strong> de retrabajo. Identificar la causa raíz es lo que nos permite pedir cambios de proceso a Gerencia — esto no se usa para evaluarte.</p>
 
-        innovationNotes: document.getElementById('innovationNotes').value.trim() || "N/A"
-      };
+      <div class="field">
+        <label class="field-label" for="reworkCause">Causa principal</label>
+        <select id="reworkCause" class="input">
+          <option value="">Selecciona la causa…</option>
+          <option>Cambio de brief o de solicitud con el trabajo ya iniciado (cliente interno)</option>
+          <option>Medidas o información incorrectas en el brief original</option>
+          <option>Material o proceso no viable, detectado tarde</option>
+          <option>Falla o retraso de proveedor o de taller</option>
+          <option>Error de diseño o de archivo de nuestro lado</option>
+          <option>Autorización tardía que obligó a rehacer</option>
+          <option>Otra causa</option>
+        </select>
+        <p class="field-hint field-hint--error" id="err-cause" hidden>Selecciona la causa principal.</p>
+      </div>
 
-      // 1. Send to Cloudflare D1 via Pages Function
-      try {
-        await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(record)
-        });
-      } catch (e) {
-        console.warn('D1 dispatch note:', e);
-      }
+      <div class="field">
+        <label class="field-label" for="reworkDescription">¿Qué pasó?</label>
+        <textarea id="reworkDescription" class="input" rows="3" placeholder="Se mandó a producción el letrero de acceso al spa y al día siguiente pidieron cambiar los horarios; se reimprimió el vinil."></textarea>
+        <p class="field-hint">Una o dos frases. Suficiente para que se entienda el patrón dentro de tres meses.</p>
+        <p class="field-hint field-hint--error" id="err-reworkDesc" hidden>Describe brevemente lo que pasó (mínimo 20 caracteres).</p>
+      </div>
 
-      // 2. Fallback in LocalStorage
-      try {
-        const local = JSON.parse(localStorage.getItem("weekly_pulse_backup") || "[]");
-        local.unshift(record);
-        localStorage.setItem("weekly_pulse_backup", JSON.stringify(local));
-      } catch(e) {}
+      <fieldset class="field">
+        <legend>¿Generó costo extra o merma de material?</legend>
+        <div class="chips chips--2 chips--danger" id="costGroup" role="radiogroup" aria-label="Costo extra"></div>
+        <p class="field-hint field-hint--error" id="err-cost" hidden>Indica si hubo costo extra.</p>
+      </fieldset>
 
-      // 3. Trigger Confetti (Palace navy palette)
-      confetti({
-        particleCount: 80,
-        spread: 70,
-        colors: ['#183456', '#1a4372', '#9b6f41', '#c69449', '#ffffff'],
-        origin: { y: 0.6 }
-      });
+      <div class="field" id="costAmountField" hidden>
+        <label class="field-label" for="costAmount">Costo aproximado <span class="opt">(opcional, MXN)</span></label>
+        <input type="number" id="costAmount" class="input" min="0" step="100" inputmode="decimal" placeholder="3500" />
+        <p class="field-hint">Si no lo sabes, déjalo vacío. Un rango aproximado vale más que nada.</p>
+      </div>
 
-      // 4. Move to success screen
-      submitBtn.disabled = false;
-      submitBtnText.innerText = "Enviar check-in";
-      nextStep(5);
-    }
+      <div class="actions">
+        <button type="button" class="btn btn--secondary" data-goto="2"><i class="ti ti-arrow-left" aria-hidden="true"></i> Atrás</button>
+        <div class="btn-spacer"></div>
+        <button type="button" class="btn btn--primary" data-goto="4">Continuar <i class="ti ti-arrow-right" aria-hidden="true"></i></button>
+      </div>
+    </section>
 
-    function resetForm() {
-      document.getElementById('starProjectName').value = "";
-      document.getElementById('starProjectValue').value = "";
-      document.getElementById('routineTasks').value = "";
-      document.getElementById('innovationNotes').value = "";
-      document.getElementById('incidentDescription').value = "";
-      setIncidentMode(false);
-      const allCards = document.querySelectorAll('.designer-card');
-      allCards.forEach(c => c.classList.remove('active'));
-      document.getElementById('designerName').value = "";
-      nextStep(0);
-    }
+    <!-- ══════════ PASO 4 · Innovación + resumen ══════════ -->
+    <section class="step" id="step-4" aria-labelledby="h-4">
+      <span class="eyebrow eyebrow--positive"><i class="ti ti-bulb" aria-hidden="true"></i> Sección 4 de 4</span>
+      <h2 class="step-heading" id="h-4">Aprendizaje y cierre</h2>
+      <p class="step-help">Si esta semana encontraste una técnica, plantilla, atajo o uso de IA que le ahorre tiempo al equipo, déjalo aquí para que no se pierda.</p>
 
-    // Modal & D1 Fetch Logic
-    function openAdminModal() {
-      document.getElementById('adminModal').classList.remove('hidden');
-      fetchD1Records();
-    }
+      <div class="field">
+        <label class="field-label" for="innovationNotes">Mejora o hallazgo <span class="opt">(opcional)</span></label>
+        <textarea id="innovationNotes" class="input" rows="3" placeholder="Armé una acción de Photoshop que exporta los cuatro formatos de tent card en un clic; ahorra ~40 min por ronda."></textarea>
+      </div>
 
-    function closeAdminModal() {
-      document.getElementById('adminModal').classList.add('hidden');
-    }
+      <div class="field">
+        <label class="field-label" for="blockers">¿Algo te bloqueó o te frenó? <span class="opt">(opcional)</span></label>
+        <textarea id="blockers" class="input" rows="2" placeholder="Sigo esperando las medidas de sitio del lobby de Moon Palace para poder cerrar el modelado."></textarea>
+        <p class="field-hint">Bloqueos que dependen de alguien más. Es la vía para que se resuelvan.</p>
+      </div>
 
-    async function fetchD1Records() {
-      const tbody = document.getElementById('dataTableBody');
-      const loading = document.getElementById('loadingMsg');
-      const noData = document.getElementById('noDataMsg');
-      const totalLbl = document.getElementById('totalRecordsLabel');
+      <div class="summary" id="summary"></div>
 
-      tbody.innerHTML = "";
-      loading.classList.remove('hidden');
-      noData.classList.add('hidden');
+      <div class="alert alert--danger" id="submitError" hidden>
+        <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+        <div id="submitErrorText"></div>
+      </div>
 
-      try {
-        const res = await fetch('/api/responses');
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const json = await res.json();
-        cachedD1Data = json.data || [];
-      } catch (err) {
-        // Fallback to local backup
-        cachedD1Data = JSON.parse(localStorage.getItem("weekly_pulse_backup") || "[]");
-      }
+      <div class="actions">
+        <button type="button" class="btn btn--secondary" data-goto="3"><i class="ti ti-arrow-left" aria-hidden="true"></i> Atrás</button>
+        <div class="btn-spacer"></div>
+        <button type="button" class="btn btn--primary" id="btnSubmit">
+          <span id="submitLabel"><i class="ti ti-send" aria-hidden="true"></i> Enviar check-in</span>
+        </button>
+      </div>
+    </section>
 
-      loading.classList.add('hidden');
-      totalLbl.innerText = `${cachedD1Data.length} registros en Cloudflare D1`;
+    <!-- ══════════ PASO 5 · Éxito ══════════ -->
+    <section class="step" id="step-5" aria-labelledby="h-5">
+      <div class="final">
+        <div class="final-icon final-icon--ok"><i class="ti ti-check" aria-hidden="true"></i></div>
+        <h2 id="h-5">Registro guardado</h2>
+        <p id="successText">Tu semana quedó registrada. Gracias por hacer visible el trabajo del equipo.</p>
+        <div class="actions">
+          <button type="button" class="btn btn--secondary" id="btnAnother">Llenar otro registro</button>
+          <button type="button" class="btn btn--primary" id="btnOpenHistory2"><i class="ti ti-database" aria-hidden="true"></i> Ver historial</button>
+        </div>
+      </div>
+    </section>
 
-      if (cachedD1Data.length === 0) {
-        noData.classList.remove('hidden');
-        return;
-      }
+  </div>
+</div>
 
-      cachedD1Data.forEach(r => {
-        const tr = document.createElement('tr');
-        const hasInc = (r.has_incident || r.hasIncident) === "Sí";
-        const cost = r.cost_impact || r.costImpact || "No";
-        tr.innerHTML = `
-          <td class="mono">${r.week_date || r.weekDate || (r.submitted_at || r.submittedAt || '').slice(0,10)}</td>
-          <td style="font-weight:500;">${r.designer}</td>
-          <td style="color:var(--fg-accent);">${r.star_project || r.starProject}</td>
-          <td>${r.star_time || r.starTime}</td>
-          <td>${r.routine_time || r.routineTime}</td>
-          <td>
-            ${hasInc
-              ? `<span class="tag tag--danger"><i class="ti ti-alert-triangle" style="font-size:11px;"></i> ${cost}</span>`
-              : `<span class="tag tag--positive"><i class="ti ti-check" style="font-size:11px;"></i> Limpio</span>`
-            }
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
+<!-- ══ Modal historial ══ -->
+<div class="overlay" id="overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" id="modal">
+    <div class="modal-head">
+      <div>
+        <div class="modal-title" id="modalTitle">Historial de check-ins <span class="tag" id="srcTag">—</span></div>
+        <div class="modal-sub">Registros semanales del equipo · base para el reporte mensual</div>
+      </div>
+      <button type="button" class="modal-close" id="modalClose" aria-label="Cerrar">&times;</button>
+    </div>
+    <div class="modal-tools">
+      <button type="button" class="btn--icon" id="btnReload"><i class="ti ti-refresh" aria-hidden="true"></i> Actualizar</button>
+      <button type="button" class="btn--icon" id="btnCsv"><i class="ti ti-file-spreadsheet" aria-hidden="true"></i> Descargar CSV</button>
+      <button type="button" class="btn--icon" id="btnPrompt"><i class="ti ti-sparkles" aria-hidden="true"></i> Copiar prompt del reporte mensual</button>
+      <span class="hours-unit" id="promptFeedback" role="status" aria-live="polite"></span>
+    </div>
+    <div class="modal-body">
+      <div class="state-msg" id="loadingMsg"><i class="ti ti-loader" aria-hidden="true"></i> Cargando registros…</div>
+      <div class="state-msg" id="emptyMsg" hidden>Todavía no hay registros. Completa el primer check-in para verlo aquí.</div>
+      <div class="table-scroll"><table class="data" id="dataTable" hidden>
+        <thead><tr>
+          <th>Semana</th><th>Diseñador</th><th class="num">Disp.</th>
+          <th class="num">Valor</th><th class="num">Estándar</th><th class="num">Operación</th>
+          <th class="num">Coord.</th><th class="num">Retrab.</th><th class="num">Otro</th>
+          <th>Proyectos</th><th>Retrabajo</th>
+        </tr></thead>
+        <tbody id="dataBody"></tbody>
+      </table></div>
+    </div>
+    <div class="modal-foot">
+      <span id="totalLabel">0 registros</span>
+      <span>Endpoint: <code>/api/responses</code></span>
+    </div>
+  </div>
+</div>
 
-    function generateClaudePromptFromD1() {
-      if (!cachedD1Data || cachedD1Data.length === 0) {
-        alert("No hay registros en la base de datos para generar el reporte.");
-        return;
-      }
+<script>
+"use strict";
 
-      const prompt = `Hola Claude. Actúa como Director Creativo / Gerente de Diseño. A continuación te proporciono los registros semanales de productividad de mi equipo de diseño (base 48 horas semanales, con meta del 80% de productividad efectiva).
+/* ═══════════════════════════════════════════════════════════
+   CONFIGURACIÓN — lo único que hay que editar para dar de
+   alta o baja gente en el equipo.
+   ═══════════════════════════════════════════════════════════ */
+const TEAM_UNIT = "Diseño Industrial y 3D";
+const STANDARD_WEEK_HOURS = 48;
 
-Con base en esta información, redacta el **Reporte Ejecutivo Mensual de Productividad** para presentar a la Gerencia General en el último briefing del mes.
+const TEAM = [
+  { id: "homero",   initials: "HH", name: "Homero Hernández Morales",    role: "Diseñador Industrial" },
+  { id: "maria",    initials: "ME", name: "María Esther Mendoza Franco", role: "Diseñadora Industrial" },
+  { id: "mitchell", initials: "MP", name: "Mitchell Pous Alarcón",       role: "Diseñador 3D" }
+];
 
-Requisitos del Reporte:
-1. **Resumen Ejecutivo General:** Visión panorámica del mes, horas totales invertidas, balance general entre Proyectos de Valor vs. Operación de Rutina (letreros, adaptaciones).
-2. **Desglose por Diseñador:**
-   - Proyectos de alto impacto y valor aportado.
-   - Distribución estimada de tiempo (% proyectos vs % rutina).
-   - Logros o innovaciones destacadas.
-3. **Análisis de Calidad, Retrabajos y Costos:**
-   - Resumen de incidencias (causas principales: briefs tardíos, proveedores, etc.).
-   - Impacto en costos adicionales o mermas (si aplica).
-   - Recomendaciones de mejora operativa para Gerencia.
-4. **Tono:** Ejecutivo, conciso, orientado a resultados y métricas de negocio (no un portafolio gráfico).
+/* Buckets de conciliación. 'projects' es derivado (viene del paso 1). */
+const BUCKETS = [
+  { key: "operation",    label: "Operación y solicitudes sueltas", hint: "Adaptaciones, ajustes menores, cambios de formato, señalización repetitiva sin proyecto propio", color: "var(--color-ocean-blue-400,#559adb)" },
+  { key: "coordination", label: "Coordinación y seguimiento",      hint: "Juntas, levantamiento de briefs, revisiones, visitas a taller, seguimiento de producción", color: "var(--color-copper-400,#c69449)" },
+  { key: "rework",       label: "Retrabajo y corrección",          hint: "Rehacer algo ya entregado o ya en producción por un cambio o un error", color: "var(--color-red-700,#b91c1c)" },
+  { key: "other",        label: "Otro / no productivo",            hint: "Capacitación, permisos, incapacidad, día festivo, tiempo muerto por bloqueo", color: "var(--color-grey-400,#a3a3a3)" }
+];
+const PROJECTS_COLOR = "var(--color-ocean-blue-900,#183456)";
 
---- DATA CRUDA DE CLOUDFLARE D1 (${cachedD1Data.length} REGISTROS) ---
-${JSON.stringify(cachedD1Data, null, 2)}
-`;
+const COST_OPTIONS = [
+  { value: "Sin costo extra (solo tiempo de diseño)", title: "Sin costo extra", sub: "Solo se perdió tiempo de diseño" },
+  { value: "Merma de material",                        title: "Merma de material", sub: "Se desperdició material" },
+  { value: "Reimpresión o reproducción",               title: "Reimpresión", sub: "Hubo que producir de nuevo" },
+  { value: "Costo de proveedor",                       title: "Costo de proveedor", sub: "Cargo externo adicional" },
+  { value: "Por determinar",                           title: "Por determinar", sub: "Aún no se sabe" }
+];
 
-      navigator.clipboard.writeText(prompt).then(() => {
-        alert("Prompt copiado al portapapeles.\n\nPégalo en Claude para generar el reporte ejecutivo completo.");
-      }).catch(err => {
-        console.error("Error al copiar:", err);
-      });
-    }
+const STEP_NAMES = ["Identificación", "Proyectos", "Reparto de la semana", "Retrabajo", "Aprendizaje y cierre"];
+const DRAFT_KEY  = "weekly_pulse_draft_v2";
+const BACKUP_KEY = "weekly_pulse_backup_v2";
 
-    document.getElementById('btnAdminModal').addEventListener('click', openAdminModal);
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeAdminModal();
+/* ═══════════════════════════════════════════════════════════
+   ESTADO — fuente única de verdad. Todo se renderiza de aquí,
+   así que reiniciar es literalmente volver a blankState().
+   `null` significa SIN RESPUESTA, distinto de 0.
+   ═══════════════════════════════════════════════════════════ */
+function blankState() {
+  return {
+    step: 0,
+    designerId: null,
+    // La semana se precarga con hoy en HORA LOCAL. Tiene que vivir aquí y no
+    // en el arranque: si no, al reiniciar el formulario se queda en null y el
+    // paso 0 se bloquea sin que se entienda por qué.
+    anyDay: ymdLocal(new Date()),  // "YYYY-MM-DD"
+    projects: [],                 // {name, hours, kind:'valor'|'estandar'|null, contribution}
+    noProjects: false,            // marcó explícitamente "solo operación"
+    hoursAvailable: STANDARD_WEEK_HOURS,
+    hours: { operation: null, coordination: null, rework: null, other: null },
+    reworkCause: "",
+    reworkDescription: "",
+    costImpact: "",
+    costAmount: "",
+    innovationNotes: "",
+    blockers: "",
+    submitting: false,
+    showErrors: {}                // se marca por paso al intentar avanzar
+  };
+}
+let S = blankState();
+let existingRecords = [];         // para detectar duplicado semana+persona
+let historySource = "";
+
+/* ═══════════════════════════════════════════════════════════
+   UTILIDADES
+   ═══════════════════════════════════════════════════════════ */
+const $ = (id) => document.getElementById(id);
+
+function escapeHtml(v) {
+  return String(v == null ? "" : v)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
+
+/* Fechas: SIEMPRE en hora local. Nunca toISOString() para fechas
+   de calendario — en UTC-6 eso adelanta el día después de las 18:00. */
+function ymdLocal(d) {
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+function parseYmd(s) {
+  if (!s) return null;
+  const p = s.split("-").map(Number);
+  if (p.length !== 3 || p.some(isNaN)) return null;
+  return new Date(p[0], p[1] - 1, p[2]);
+}
+function mondayOf(d) {
+  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const dow = x.getDay() || 7;            // domingo = 7
+  x.setDate(x.getDate() - (dow - 1));
+  return x;
+}
+function isoWeekOf(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dow = t.getUTCDay() || 7;
+  t.setUTCDate(t.getUTCDate() + 4 - dow);  // jueves de esa semana
+  const yearStart = new Date(Date.UTC(t.getUTCFullYear(), 0, 1));
+  const week = Math.ceil(((t - yearStart) / 86400000 + 1) / 7);
+  return { year: t.getUTCFullYear(), week: week,
+           iso: t.getUTCFullYear() + "-W" + String(week).padStart(2, "0") };
+}
+const MONTHS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+function humanRange(monday) {
+  const sunday = new Date(monday); sunday.setDate(sunday.getDate() + 6);
+  const a = monday.getDate() + " " + MONTHS[monday.getMonth()];
+  const b = sunday.getDate() + " " + MONTHS[sunday.getMonth()];
+  return a + " – " + b + " " + sunday.getFullYear();
+}
+function fmtHours(n) {
+  if (n == null || n === "") return "—";
+  const v = Number(n);
+  if (isNaN(v)) return "—";
+  return (Math.round(v * 2) / 2).toString().replace(/\.0$/, "") + " h";
+}
+function num(v) { const n = Number(v); return isNaN(n) ? 0 : n; }
+
+/* ═══════════════════════════════════════════════════════════
+   DERIVADOS
+   ═══════════════════════════════════════════════════════════ */
+function weekInfo() {
+  const d = parseYmd(S.anyDay);
+  if (!d) return null;
+  const monday = mondayOf(d);
+  const iso = isoWeekOf(d);
+  return { monday: monday, weekStart: ymdLocal(monday), iso: iso.iso,
+           week: iso.week, year: iso.year, human: humanRange(monday) };
+}
+function designer() { return TEAM.find(p => p.id === S.designerId) || null; }
+
+function projectHours(kind) {
+  return S.projects.reduce((sum, p) =>
+    (!kind || p.kind === kind) ? sum + num(p.hours) : sum, 0);
+}
+function hoursProjects()  { return projectHours(null); }
+function hoursAssigned() {
+  return hoursProjects() + BUCKETS.reduce((s, b) => s + num(S.hours[b.key]), 0);
+}
+function balanceDelta() { return Math.round((hoursAssigned() - num(S.hoursAvailable)) * 2) / 2; }
+function hasRework() { return num(S.hours.rework) > 0; }
+
+/* Paso 3 se salta si no hay horas de retrabajo. */
+function isStepSkipped(i) { return i === 3 && !hasRework(); }
+
+/* ═══════════════════════════════════════════════════════════
+   VALIDACIÓN POR PASO
+   ═══════════════════════════════════════════════════════════ */
+function validateStep(i) {
+  const e = {};
+  if (i === 0) {
+    if (!S.designerId) e.designer = true;
+    if (!weekInfo())   e.week = true;
+  }
+  if (i === 1) {
+    if (S.projects.length === 0 && !S.noProjects) e.projNone = true;
+    S.projects.forEach((p, idx) => {
+      if (!p.name.trim())                     e["projName" + idx] = true;
+      if (!(num(p.hours) > 0))                e["projHours" + idx] = true;
+      if (!p.kind)                            e["projKind" + idx] = true;
+      if (p.kind === "valor" && p.contribution.trim().length < 15) e["projContrib" + idx] = true;
     });
-  </script>
+  }
+  if (i === 2) {
+    if (!(num(S.hoursAvailable) > 0)) e.avail = true;
+    if (balanceDelta() !== 0)         e.balance = true;
+  }
+  if (i === 3 && hasRework()) {
+    if (!S.reworkCause)                          e.cause = true;
+    if (S.reworkDescription.trim().length < 20)  e.reworkDesc = true;
+    if (!S.costImpact)                           e.cost = true;
+  }
+  return e;
+}
+function stepIsValid(i) { return Object.keys(validateStep(i)).length === 0; }
 
+/* ═══════════════════════════════════════════════════════════
+   RENDER
+   ═══════════════════════════════════════════════════════════ */
+function render() {
+  renderSteps();
+  renderProgress();
+  renderPeople();
+  renderWeek();
+  renderProjects();
+  renderReconciliation();
+  renderRework();
+  renderSummary();
+  renderErrors();
+}
+
+function renderSteps() {
+  for (let i = 0; i <= 5; i++) {
+    $("step-" + i).classList.toggle("is-active", i === S.step);
+  }
+}
+
+function renderProgress() {
+  const wrap = $("progressWrap");
+  if (S.step >= 5) { wrap.style.display = "none"; return; }
+  wrap.style.display = "";
+  $("progressStep").textContent = "Paso " + (S.step + 1) + " de 5";
+  $("progressName").textContent = STEP_NAMES[S.step];
+  $("progressFill").style.width = ((S.step + 1) / 5 * 100) + "%";
+  wrap.querySelector('[role="progressbar"]').setAttribute("aria-valuenow", S.step + 1);
+}
+
+function renderPeople() {
+  const grid = $("personGrid");
+  if (grid.dataset.built !== "1") {
+    grid.innerHTML = TEAM.map(p => `
+      <button type="button" class="person" role="radio" aria-checked="false" data-person="${escapeHtml(p.id)}">
+        <span class="avatar" aria-hidden="true">${escapeHtml(p.initials)}</span>
+        <span>
+          <span class="person-name">${escapeHtml(p.name)}</span>
+          <span class="person-role">${escapeHtml(p.role)}</span>
+        </span>
+        <i class="ti ti-circle-check person-check" aria-hidden="true"></i>
+      </button>`).join("");
+    grid.dataset.built = "1";
+    grid.querySelectorAll("[data-person]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        S.designerId = btn.dataset.person;
+        delete S.showErrors[0];
+        saveDraft(); render();
+      });
+    });
+  }
+  grid.querySelectorAll("[data-person]").forEach(btn => {
+    btn.setAttribute("aria-checked", btn.dataset.person === S.designerId ? "true" : "false");
+  });
+}
+
+function renderWeek() {
+  const input = $("anyDayOfWeek");
+  if (input.value !== (S.anyDay || "")) input.value = S.anyDay || "";
+  const w = weekInfo();
+  const out = $("weekReadout");
+  if (w) {
+    out.innerHTML = '<i class="ti ti-calendar-week" aria-hidden="true"></i>' +
+      `<span>Semana <strong>${w.week}</strong> de ${w.year} · <strong>${escapeHtml(w.human)}</strong></span>`;
+  } else {
+    out.innerHTML = '<i class="ti ti-calendar-week" aria-hidden="true"></i>' +
+      "<span>Selecciona cualquier día de la semana que quieres reportar.</span>";
+  }
+  renderDuplicateWarning();
+}
+
+function renderDuplicateWarning() {
+  const w = weekInfo(), d = designer();
+  const alert = $("dupAlert");
+  if (!w || !d) { alert.hidden = true; return; }
+  const dup = existingRecords.find(r =>
+    (r.week_iso || r.weekIso) === w.iso && (r.designer || "") === d.name);
+  if (!dup) { alert.hidden = true; return; }
+  $("dupText").innerHTML = `Ya hay un registro de <strong>${escapeHtml(d.name)}</strong> ` +
+    `para la semana ${w.week}. Si envías, <strong>se reemplazará</strong> el anterior.`;
+  alert.hidden = false;
+}
+
+function renderProjects() {
+  const list = $("projList");
+  const open = document.activeElement;
+  const focusKey = open && open.dataset ? open.dataset.focusKey : null;
+  const caret = open && open.setSelectionRange ? open.selectionStart : null;
+
+  list.innerHTML = S.projects.map((p, i) => {
+    const err = S.showErrors[1] || {};
+    return `
+    <div class="proj">
+      <div class="proj-head">
+        <span class="proj-idx">Proyecto ${i + 1}</span>
+        <button type="button" class="proj-del" data-del="${i}" aria-label="Eliminar proyecto ${i + 1}">
+          <i class="ti ti-trash" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="pname-${i}">Nombre del proyecto</label>
+        <input id="pname-${i}" class="input${err["projName" + i] ? " input--error" : ""}"
+               type="text" data-pfield="name" data-pidx="${i}" data-focus-key="pname-${i}"
+               value="${escapeHtml(p.name)}"
+               placeholder="Señalización Lobby Moon Palace, Escultura Manta Ray, Antifaces ronda buffet…" />
+        <p class="field-hint field-hint--error"${err["projName" + i] ? "" : " hidden"}>Ponle nombre al proyecto.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="phours-${i}">Horas dedicadas esta semana</label>
+        <div class="hours">
+          <button type="button" class="hours-btn" data-pstep="-1" data-pidx="${i}" aria-label="Restar 1 hora">−</button>
+          <input id="phours-${i}" class="input hours-input${err["projHours" + i] ? " input--error" : ""}"
+                 type="number" min="0" max="80" step="0.5" inputmode="decimal"
+                 data-pfield="hours" data-pidx="${i}" data-focus-key="phours-${i}"
+                 value="${p.hours == null ? "" : escapeHtml(p.hours)}" />
+          <button type="button" class="hours-btn" data-pstep="1" data-pidx="${i}" aria-label="Sumar 1 hora">+</button>
+          <span class="hours-unit">horas</span>
+        </div>
+        <p class="field-hint field-hint--error"${err["projHours" + i] ? "" : " hidden"}>Indica cuántas horas le dedicaste.</p>
+      </div>
+
+      <fieldset class="field">
+        <legend>¿Qué tipo de trabajo fue?</legend>
+        <div class="chips chips--2" role="radiogroup" aria-label="Tipo de trabajo del proyecto ${i + 1}">
+          <button type="button" class="chip" role="radio" data-pkind="valor" data-pidx="${i}"
+                  aria-checked="${p.kind === "valor"}">
+            <span class="chip-title">Aportó algo nuevo</span>
+            <span class="chip-sub">Solución, concepto o mejora que no existía</span>
+          </button>
+          <button type="button" class="chip" role="radio" data-pkind="estandar" data-pidx="${i}"
+                  aria-checked="${p.kind === "estandar"}">
+            <span class="chip-title">Ejecución estándar</span>
+            <span class="chip-sub">Aplicamos lo que ya sabíamos hacer</span>
+          </button>
+        </div>
+        <p class="field-hint field-hint--error"${err["projKind" + i] ? "" : " hidden"}>Elige el tipo de trabajo.</p>
+      </fieldset>
+
+      ${p.kind === "valor" ? `
+      <div class="field">
+        <label class="field-label" for="pcontrib-${i}">¿Qué aportaste de nuevo?</label>
+        <textarea id="pcontrib-${i}" class="input${err["projContrib" + i] ? " input--error" : ""}" rows="3"
+                  data-pfield="contribution" data-pidx="${i}" data-focus-key="pcontrib-${i}"
+                  placeholder="Propuse un sistema modular de placas que permite cambiar el texto sin reimprimir el soporte; baja el costo de actualización a la mitad.">${escapeHtml(p.contribution)}</textarea>
+        <p class="field-hint">Esto es lo que la Gerencia va a leer. Concreto y en resultado, no en tarea.</p>
+        <p class="field-hint field-hint--error"${err["projContrib" + i] ? "" : " hidden"}>Describe la aportación (mínimo 15 caracteres).</p>
+      </div>` : ""}
+    </div>`;
+  }).join("");
+
+  $("projEmpty").hidden = !(S.noProjects && S.projects.length === 0);
+  $("btnNoProj").hidden = S.projects.length > 0;
+
+  if (focusKey) {
+    const again = list.querySelector('[data-focus-key="' + focusKey + '"]');
+    if (again) {
+      again.focus();
+      if (caret != null && again.setSelectionRange) {
+        try { again.setSelectionRange(caret, caret); } catch (_) {}
+      }
+    }
+  }
+}
+
+function renderReconciliation() {
+  const availInput = $("hoursAvailable");
+  if (availInput.value !== String(S.hoursAvailable)) availInput.value = S.hoursAvailable;
+
+  const rows = $("recRows");
+  const pHours = hoursProjects();
+
+  const lockedRow = `
+    <div class="rec-row rec-row--locked">
+      <span class="rec-swatch" style="background:${PROJECTS_COLOR}"></span>
+      <span>
+        <span class="rec-label">Proyectos</span>
+        <span class="rec-hint">${S.projects.length === 0
+          ? "No registraste proyectos esta semana"
+          : S.projects.length + (S.projects.length === 1 ? " proyecto" : " proyectos") + " del paso anterior"}</span>
+      </span>
+      <span class="rec-locked-val">${(Math.round(pHours * 2) / 2)} <span class="u">h</span></span>
+    </div>`;
+
+  const bucketRows = BUCKETS.map(b => `
+    <div class="rec-row">
+      <span class="rec-swatch" style="background:${b.color}"></span>
+      <span>
+        <label class="rec-label" for="h-${b.key}">${escapeHtml(b.label)}</label>
+        <span class="rec-hint">${escapeHtml(b.hint)}</span>
+      </span>
+      <span class="hours">
+        <button type="button" class="hours-btn" data-bstep="-1" data-bkey="${b.key}" aria-label="Restar 1 hora a ${escapeHtml(b.label)}">−</button>
+        <input id="h-${b.key}" class="input hours-input" type="number" min="0" max="80" step="0.5"
+               inputmode="decimal" data-bkey="${b.key}" data-focus-key="h-${b.key}"
+               value="${S.hours[b.key] == null ? "" : escapeHtml(S.hours[b.key])}" />
+        <button type="button" class="hours-btn" data-bstep="1" data-bkey="${b.key}" aria-label="Sumar 1 hora a ${escapeHtml(b.label)}">+</button>
+      </span>
+    </div>`).join("");
+
+  const active = document.activeElement;
+  const fk = active && active.dataset ? active.dataset.focusKey : null;
+  rows.innerHTML = lockedRow + bucketRows;
+  if (fk) { const a = rows.querySelector('[data-focus-key="' + fk + '"]'); if (a) a.focus(); }
+
+  // Barra + mensaje
+  const avail = num(S.hoursAvailable);
+  const assigned = hoursAssigned();
+  const delta = balanceDelta();
+  const box = $("balance");
+  box.classList.remove("balance--ok", "balance--over", "balance--under");
+
+  const segs = [{ v: pHours, c: PROJECTS_COLOR }]
+    .concat(BUCKETS.map(b => ({ v: num(S.hours[b.key]), c: b.color })));
+  const denom = Math.max(avail, assigned) || 1;
+  $("balanceBar").innerHTML = segs
+    .filter(s => s.v > 0)
+    .map(s => `<span class="balance-seg" style="width:${(s.v / denom * 100)}%;background:${s.c}"></span>`)
+    .join("");
+
+  let msg, icon, live;
+  if (assigned === 0) {
+    msg = "Empieza a repartir tus horas"; icon = "ti-minus";
+    live = "Sin horas asignadas.";
+  } else if (delta === 0) {
+    box.classList.add("balance--ok");
+    msg = "Cuadra: tu semana está completa"; icon = "ti-circle-check";
+    live = "La semana cuadra en " + avail + " horas.";
+  } else if (delta < 0) {
+    box.classList.add("balance--under");
+    msg = "Faltan " + fmtHours(-delta) + " por asignar"; icon = "ti-alert-circle";
+    live = "Faltan " + fmtHours(-delta) + ".";
+  } else {
+    box.classList.add("balance--over");
+    msg = "Te sobran " + fmtHours(delta) + " de más"; icon = "ti-alert-triangle";
+    live = "Excedes por " + fmtHours(delta) + ".";
+  }
+  $("balanceMsg").innerHTML = `<i class="ti ${icon}" aria-hidden="true"></i> ${escapeHtml(msg)}`;
+  $("balanceCount").textContent = (Math.round(assigned * 2) / 2) + " de " + avail + " h";
+  $("balanceLive").textContent = live;
+
+  const fix = $("balanceFix");
+  if (delta < 0) {
+    fix.hidden = false;
+    fix.textContent = "Mandar las " + fmtHours(-delta) + " restantes a «Otro / no productivo»";
+  } else if (delta > 0) {
+    fix.hidden = false;
+    fix.textContent = "Subir las horas disponibles a " + (Math.round(assigned * 2) / 2) + " h";
+  } else {
+    fix.hidden = true;
+  }
+}
+
+function renderRework() {
+  $("reworkHrsEcho").textContent = fmtHours(S.hours.rework);
+  $("reworkCause").value = S.reworkCause;
+  $("reworkDescription").value = S.reworkDescription;
+
+  const group = $("costGroup");
+  if (group.dataset.built !== "1") {
+    group.innerHTML = COST_OPTIONS.map(o => `
+      <button type="button" class="chip" role="radio" data-cost="${escapeHtml(o.value)}" aria-checked="false">
+        <span class="chip-title">${escapeHtml(o.title)}</span>
+        <span class="chip-sub">${escapeHtml(o.sub)}</span>
+      </button>`).join("");
+    group.dataset.built = "1";
+    group.querySelectorAll("[data-cost]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        S.costImpact = btn.dataset.cost;
+        if (S.costImpact === COST_OPTIONS[0].value) S.costAmount = "";
+        saveDraft(); render();
+      });
+    });
+  }
+  group.querySelectorAll("[data-cost]").forEach(btn => {
+    btn.setAttribute("aria-checked", btn.dataset.cost === S.costImpact ? "true" : "false");
+  });
+
+  const showAmount = S.costImpact && S.costImpact !== COST_OPTIONS[0].value;
+  $("costAmountField").hidden = !showAmount;
+  $("costAmount").value = S.costAmount;
+
+  $("innovationNotes").value = S.innovationNotes;
+  $("blockers").value = S.blockers;
+}
+
+function renderSummary() {
+  const w = weekInfo(), d = designer();
+  const rows = [];
+  const add = (k, v) => rows.push(
+    `<div class="summary-row"><span class="summary-k">${k}</span><span class="summary-v">${v}</span></div>`);
+
+  add("Diseñador", d ? escapeHtml(d.name) : '<span class="muted">Sin definir</span>');
+  add("Semana", w ? `Semana ${w.week} · <span class="muted">${escapeHtml(w.human)}</span>` : '<span class="muted">Sin definir</span>');
+  add("Horas disponibles", fmtHours(S.hoursAvailable));
+
+  if (S.projects.length === 0) {
+    add("Proyectos", '<span class="muted">Semana de operación, sin proyectos con nombre propio</span>');
+  } else {
+    add("Proyectos", S.projects.map(p =>
+      `${escapeHtml(p.name || "Sin nombre")} — ${fmtHours(p.hours)} ` +
+      `<span class="muted">(${p.kind === "valor" ? "aportó algo nuevo" : p.kind === "estandar" ? "ejecución estándar" : "sin clasificar"})</span>`
+    ).join("<br>"));
+  }
+
+  const vh = projectHours("valor");
+  if (vh > 0) add("Horas de valor", fmtHours(vh) +
+    ` <span class="muted">(${Math.round(vh / Math.max(num(S.hoursAvailable), 1) * 100)}% de la semana)</span>`);
+
+  BUCKETS.forEach(b => {
+    if (num(S.hours[b.key]) > 0) add(escapeHtml(b.label), fmtHours(S.hours[b.key]));
+  });
+
+  if (hasRework()) {
+    add("Retrabajo", `<span class="pill pill--warn">${fmtHours(S.hours.rework)}</span>`);
+    add("Causa", S.reworkCause ? escapeHtml(S.reworkCause) : '<span class="muted">Sin definir</span>');
+    add("Costo extra", S.costImpact
+      ? escapeHtml(S.costImpact) + (S.costAmount ? ` <span class="muted">· ~$${escapeHtml(S.costAmount)} MXN</span>` : "")
+      : '<span class="muted">Sin definir</span>');
+  } else {
+    add("Retrabajo", '<span class="pill pill--ok">Sin retrabajo</span>');
+  }
+
+  if (S.innovationNotes.trim()) add("Mejora o hallazgo", escapeHtml(S.innovationNotes.trim()));
+  if (S.blockers.trim())        add("Bloqueos", escapeHtml(S.blockers.trim()));
+
+  const delta = balanceDelta();
+  if (delta !== 0) {
+    add("Conciliación", `<span class="pill pill--warn">${delta > 0 ? "Excede" : "Falta"} ${fmtHours(Math.abs(delta))}</span>`);
+  }
+
+  $("summary").innerHTML =
+    '<div class="summary-head">Resumen completo de tu check-in</div>' + rows.join("");
+}
+
+function renderErrors() {
+  const e = S.showErrors[S.step] || {};
+  $("err-designer").hidden = !e.designer;
+  $("err-week").hidden     = !e.week;
+  $("err-proj").hidden     = !(e.projNone || Object.keys(e).some(k => k.startsWith("proj")));
+  if (e.projNone) $("err-proj").textContent =
+    "Agrega al menos un proyecto, o marca «Esta semana fue solo operación».";
+  else $("err-proj").textContent =
+    "Completa el nombre, las horas y el tipo de cada proyecto, o elimínalo.";
+  $("err-cause").hidden      = !e.cause;
+  $("err-reworkDesc").hidden = !e.reworkDesc;
+  $("err-cost").hidden       = !e.cost;
+  $("reworkCause").classList.toggle("input--error", !!e.cause);
+  $("reworkDescription").classList.toggle("input--error", !!e.reworkDesc);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NAVEGACIÓN
+   ═══════════════════════════════════════════════════════════ */
+function goTo(target) {
+  if (target > S.step) {
+    // valida todos los pasos intermedios, no solo el actual
+    for (let i = S.step; i < target; i++) {
+      if (isStepSkipped(i)) continue;
+      const errs = validateStep(i);
+      if (Object.keys(errs).length) {
+        S.showErrors[i] = errs; S.step = i; render(); focusFirstError(); return;
+      }
+    }
+  }
+  while (isStepSkipped(target) && target > 0 && target < 5) {
+    target = target > S.step ? target + 1 : target - 1;
+  }
+  S.step = Math.max(0, Math.min(5, target));
+  saveDraft(); render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+function focusFirstError() {
+  const el = document.querySelector(".step.is-active .input--error, .step.is-active .field-hint--error:not([hidden])");
+  if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BORRADOR
+   ═══════════════════════════════════════════════════════════ */
+let draftTimer = null;
+function saveDraft() {
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => {
+    try {
+      const copy = Object.assign({}, S);
+      delete copy.submitting; delete copy.showErrors;
+      localStorage.setItem(DRAFT_KEY, JSON.stringify({ at: new Date().toISOString(), state: copy }));
+    } catch (_) {}
+  }, 400);
+}
+function clearDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (_) {} }
+
+function offerDraft() {
+  let raw = null;
+  try { raw = localStorage.getItem(DRAFT_KEY); } catch (_) {}
+  if (!raw) return;
+  let parsed;
+  try { parsed = JSON.parse(raw); } catch (_) { return; }
+  if (!parsed || !parsed.state || !parsed.state.designerId) return;
+  const when = new Date(parsed.at);
+  $("draftWhen").textContent = when.toLocaleString("es-MX",
+    { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" });
+  $("draftAlert").hidden = false;
+  $("draftRestore").onclick = () => {
+    S = Object.assign(blankState(), parsed.state, { step: 0, showErrors: {}, submitting: false });
+    $("draftAlert").hidden = true; render();
+  };
+  $("draftDiscard").onclick = () => { clearDraft(); $("draftAlert").hidden = true; };
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PAYLOAD Y ENVÍO
+   ═══════════════════════════════════════════════════════════ */
+function buildRecord() {
+  const w = weekInfo(), d = designer();
+  return {
+    id: "rec_" + Date.now(),
+    submitted_at: new Date().toISOString(),
+    schema_version: 2,
+
+    week_iso: w.iso,
+    week_start: w.weekStart,
+    week_number: w.week,
+    week_year: w.year,
+
+    designer: d.name,
+    designer_id: d.id,
+    designer_role: d.role,
+    team_unit: TEAM_UNIT,
+
+    hours_available:    num(S.hoursAvailable),
+    hours_value:        projectHours("valor"),
+    hours_standard:     projectHours("estandar"),
+    hours_projects:     hoursProjects(),
+    hours_operation:    num(S.hours.operation),
+    hours_coordination: num(S.hours.coordination),
+    hours_rework:       num(S.hours.rework),
+    hours_other:        num(S.hours.other),
+    hours_assigned:     hoursAssigned(),
+
+    project_count: S.projects.length,
+    projects_json: JSON.stringify(S.projects.map(p => ({
+      name: p.name.trim(),
+      hours: num(p.hours),
+      kind: p.kind,
+      contribution: p.kind === "valor" ? p.contribution.trim() : ""
+    }))),
+
+    has_rework:         hasRework() ? "Sí" : "No",
+    rework_cause:       hasRework() ? S.reworkCause : "",
+    rework_description: hasRework() ? S.reworkDescription.trim() : "",
+    cost_impact:        hasRework() ? S.costImpact : "",
+    cost_amount_mxn:    hasRework() && S.costAmount !== "" ? num(S.costAmount) : null,
+
+    innovation_notes: S.innovationNotes.trim(),
+    blockers:         S.blockers.trim()
+  };
+}
+
+function backupLocally(record) {
+  try {
+    const arr = JSON.parse(localStorage.getItem(BACKUP_KEY) || "[]");
+    arr.unshift(record);
+    localStorage.setItem(BACKUP_KEY, JSON.stringify(arr.slice(0, 300)));
+  } catch (_) {}
+}
+
+async function submit() {
+  // revalida TODO antes de enviar
+  for (let i = 0; i <= 4; i++) {
+    if (isStepSkipped(i)) continue;
+    const errs = validateStep(i);
+    if (Object.keys(errs).length) {
+      S.showErrors[i] = errs; S.step = i; render(); focusFirstError(); return;
+    }
+  }
+
+  const record = buildRecord();
+  const btn = $("btnSubmit"), label = $("submitLabel");
+  const errBox = $("submitError");
+
+  errBox.hidden = true;
+  btn.disabled = true;
+  label.innerHTML = '<span class="spinner" aria-hidden="true"></span> Guardando…';
+
+  backupLocally(record);   // respaldo primero: nunca perdemos el dato
+
+  let ok = false, detail = "";
+  try {
+    const res = await fetch("/api/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(record)
+    });
+    let body = null;
+    try { body = await res.json(); } catch (_) {}
+    if (res.ok && body && body.success) ok = true;
+    else detail = (body && body.error) ? body.error : ("HTTP " + res.status);
+  } catch (err) {
+    detail = err && err.message ? err.message : "Sin conexión";
+  }
+
+  btn.disabled = false;
+  label.innerHTML = '<i class="ti ti-send" aria-hidden="true"></i> Enviar check-in';
+
+  if (ok) {
+    clearDraft();
+    if (window.confetti) {
+      confetti({ particleCount: 80, spread: 70, origin: { y: 0.6 },
+        colors: ["#183456", "#1a4372", "#9b6f41", "#c69449", "#ffffff"] });
+    }
+    const w = weekInfo();
+    $("successText").textContent =
+      "Semana " + w.week + " de " + designer().name.split(" ")[0] +
+      " registrada. Gracias por hacer visible el trabajo del equipo.";
+    S.step = 5; render();
+    existingRecords = [];   // se recarga al abrir el historial
+  } else {
+    // NO se muestra éxito. El dato quedó respaldado localmente.
+    errBox.hidden = false;
+    $("submitErrorText").innerHTML =
+      "<strong>No se pudo guardar en el servidor.</strong> Tu respuesta quedó " +
+      "respaldada en este navegador, así que no se perdió — pero todavía no está " +
+      "en la base central. Revisa tu conexión y vuelve a darle Enviar. " +
+      "<span class=\"muted\">Detalle: " + escapeHtml(detail) + "</span>";
+    errBox.scrollIntoView({ block: "center", behavior: "smooth" });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HISTORIAL
+   ═══════════════════════════════════════════════════════════ */
+async function loadRecords() {
+  $("loadingMsg").hidden = false;
+  $("emptyMsg").hidden = true;
+  $("dataTable").hidden = true;
+
+  let rows = [], source = "servidor";
+  try {
+    const res = await fetch("/api/responses");
+    const body = await res.json();
+    if (!res.ok || !body.success) throw new Error(body.error || ("HTTP " + res.status));
+    rows = body.data || [];
+  } catch (_) {
+    source = "respaldo local";
+    try { rows = JSON.parse(localStorage.getItem(BACKUP_KEY) || "[]"); } catch (_) { rows = []; }
+  }
+
+  existingRecords = rows;
+  historySource = source;
+  renderHistory(rows, source);
+  renderDuplicateWarning();
+}
+
+function renderHistory(rows, source) {
+  $("loadingMsg").hidden = true;
+  const tag = $("srcTag");
+  tag.textContent = source === "servidor" ? "Base central" : "Respaldo local";
+  tag.style.background = source === "servidor" ? "var(--bg-positive-weak)" : "var(--bg-warning-weak)";
+  tag.style.color      = source === "servidor" ? "var(--fg-positive)"      : "var(--fg-warning)";
+  $("totalLabel").textContent = rows.length + (rows.length === 1 ? " registro" : " registros") +
+    " · origen: " + source;
+
+  if (!rows.length) { $("emptyMsg").hidden = false; return; }
+
+  $("dataTable").hidden = false;
+  $("dataBody").innerHTML = rows.map(r => {
+    let projects = [];
+    try { projects = JSON.parse(r.projects_json || "[]"); } catch (_) {}
+    const projLabel = projects.length
+      ? projects.map(p => escapeHtml(p.name) + " (" + p.hours + "h)").join("<br>")
+      : '<span style="color:var(--fg-weak)">Operación</span>';
+    const rw = num(r.hours_rework) > 0
+      ? '<span class="pill pill--warn">' + escapeHtml(r.rework_cause || "Sin causa") + "</span>"
+      : '<span class="pill pill--ok">Limpio</span>';
+    const wk = r.week_iso
+      ? escapeHtml(r.week_iso) + '<br><span style="color:var(--fg-weak)">' + escapeHtml(r.week_start || "") + "</span>"
+      : escapeHtml(r.week_start || "—");
+    return "<tr>" +
+      "<td>" + wk + "</td>" +
+      "<td>" + escapeHtml(r.designer || "—") + "</td>" +
+      '<td class="num">' + num(r.hours_available) + "</td>" +
+      '<td class="num">' + num(r.hours_value) + "</td>" +
+      '<td class="num">' + num(r.hours_standard) + "</td>" +
+      '<td class="num">' + num(r.hours_operation) + "</td>" +
+      '<td class="num">' + num(r.hours_coordination) + "</td>" +
+      '<td class="num">' + num(r.hours_rework) + "</td>" +
+      '<td class="num">' + num(r.hours_other) + "</td>" +
+      "<td>" + projLabel + "</td>" +
+      "<td>" + rw + "</td>" +
+      "</tr>";
+  }).join("");
+}
+
+function buildMonthlyPrompt(rows) {
+  const totals = rows.reduce((a, r) => {
+    a.available += num(r.hours_available); a.value += num(r.hours_value);
+    a.standard += num(r.hours_standard);   a.operation += num(r.hours_operation);
+    a.coordination += num(r.hours_coordination); a.rework += num(r.hours_rework);
+    a.other += num(r.hours_other);
+    if (num(r.cost_amount_mxn) > 0) a.cost += num(r.cost_amount_mxn);
+    if (num(r.hours_rework) > 0) a.reworkWeeks += 1;
+    return a;
+  }, { available:0, value:0, standard:0, operation:0, coordination:0, rework:0, other:0, cost:0, reworkWeeks:0 });
+
+  const pct = (v) => totals.available ? (v / totals.available * 100).toFixed(1) + "%" : "n/d";
+
+  return [
+"Actúa como analista de operación de diseño. Vas a redactar el REPORTE MENSUAL DE PRODUCTIVIDAD",
+"del equipo de " + TEAM_UNIT + " de The Palace Company, a partir de los check-ins semanales que te doy abajo.",
+"",
+"CONTEXTO DEL INSTRUMENTO",
+"- Cada registro es una persona × una semana. Las horas son autorreportadas y aproximadas.",
+"- La semana estándar es de " + STANDARD_WEEK_HOURS + " h; 'hours_available' se ajusta por vacaciones, permisos o festivos.",
+"- Las horas cierran por construcción: hours_value + hours_standard + hours_operation +",
+"  hours_coordination + hours_rework + hours_other = hours_available.",
+"- 'hours_value' son horas en proyectos donde el diseñador aportó algo nuevo; 'hours_standard'",
+"  son proyectos de ejecución conocida; 'hours_operation' es trabajo suelto sin proyecto propio.",
+"",
+"TOTALES YA CALCULADOS (úsalos, no los recalcules)",
+"- Registros: " + rows.length + " · semanas con retrabajo: " + totals.reworkWeeks,
+"- Horas disponibles totales: " + totals.available,
+"- Valor: " + totals.value + " h (" + pct(totals.value) + ")",
+"- Ejecución estándar: " + totals.standard + " h (" + pct(totals.standard) + ")",
+"- Operación suelta: " + totals.operation + " h (" + pct(totals.operation) + ")",
+"- Coordinación: " + totals.coordination + " h (" + pct(totals.coordination) + ")",
+"- Retrabajo: " + totals.rework + " h (" + pct(totals.rework) + ")",
+"- Otro / no productivo: " + totals.other + " h (" + pct(totals.other) + ")",
+"- Costo extra identificado: $" + totals.cost + " MXN",
+"",
+"QUÉ QUIERO QUE PRODUZCAS",
+"1. Resumen ejecutivo (máximo 6 líneas): en qué se invirtió el mes y qué cambió respecto a lo esperable.",
+"2. Mix del mes: reparto valor / estándar / operación / coordinación / retrabajo, con lectura de qué implica.",
+"3. Desglose por diseñador: proyectos relevantes con su aportación concreta y horas. Cuando una persona",
+"   no tuvo proyectos especiales, resúmelo como operación con uno o dos ejemplos representativos.",
+"4. Retrabajo: tasa (horas de retrabajo / horas disponibles), causa raíz dominante y costo asociado.",
+"   Distingue explícitamente las causas internas de las externas al equipo.",
+"5. Oportunidades de mejora: máximo tres, cada una anclada a un dato de la tabla.",
+"6. Bloqueos abiertos que requieren decisión de otra área.",
+"",
+"REGLAS",
+"- Tono ejecutivo, español de México, frases cortas. Sin adjetivos de relleno.",
+"- No inventes cifras ni proyectos que no estén en los datos.",
+"- Si un dato falta o es inconsistente, dilo en una sección final de 'Calidad del dato'.",
+"- No emitas juicios de desempeño individual: describe cómo se invirtió el tiempo, no si alguien",
+"  trabajó bien o mal. Las horas son autorreportadas y no son una medida de rendimiento.",
+"",
+"--- DATOS (" + rows.length + " registros, JSON) ---",
+JSON.stringify(rows, null, 2)
+  ].join("\n");
+}
+
+async function copyPrompt() {
+  const fb = $("promptFeedback");
+  if (!existingRecords.length) {
+    fb.textContent = "No hay registros para generar el reporte.";
+    return;
+  }
+  const text = buildMonthlyPrompt(existingRecords);
+  try {
+    await navigator.clipboard.writeText(text);
+    fb.textContent = "Prompt copiado. Pégalo en Claude.";
+  } catch (_) {
+    // fallback si el portapapeles está bloqueado
+    const ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    let done = false;
+    try { done = document.execCommand("copy"); } catch (_) {}
+    document.body.removeChild(ta);
+    fb.textContent = done
+      ? "Prompt copiado. Pégalo en Claude."
+      : "No se pudo copiar. Descarga el CSV y pásaselo a Claude.";
+  }
+  setTimeout(() => { fb.textContent = ""; }, 5000);
+}
+
+/* ─── Modal: focus trap, Escape, click en overlay ─── */
+let lastFocused = null;
+function openModal() {
+  lastFocused = document.activeElement;
+  $("overlay").classList.add("is-open");
+  $("modalClose").focus();
+  loadRecords();
+}
+function closeModal() {
+  $("overlay").classList.remove("is-open");
+  if (lastFocused) lastFocused.focus();
+}
+$("overlay").addEventListener("mousedown", (e) => { if (e.target === $("overlay")) closeModal(); });
+document.addEventListener("keydown", (e) => {
+  if (!$("overlay").classList.contains("is-open")) return;
+  if (e.key === "Escape") { closeModal(); return; }
+  if (e.key !== "Tab") return;
+  const f = $("modal").querySelectorAll('button:not([disabled]),[href],input,select,textarea,[tabindex]:not([tabindex="-1"])');
+  if (!f.length) return;
+  const first = f[0], last = f[f.length - 1];
+  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+  else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+});
+
+/* ═══════════════════════════════════════════════════════════
+   EVENTOS
+   ═══════════════════════════════════════════════════════════ */
+document.querySelectorAll("[data-goto]").forEach(btn => {
+  btn.addEventListener("click", () => goTo(Number(btn.dataset.goto)));
+});
+
+/* Semana */
+$("anyDayOfWeek").addEventListener("change", (e) => {
+  S.anyDay = e.target.value || null;
+  if (S.showErrors[0]) delete S.showErrors[0].week;
+  saveDraft(); render();
+});
+$("btnThisWeek").addEventListener("click", () => {
+  S.anyDay = ymdLocal(new Date());
+  if (S.showErrors[0]) delete S.showErrors[0].week;
+  saveDraft(); render();
+});
+$("btnLastWeek").addEventListener("click", () => {
+  const d = new Date(); d.setDate(d.getDate() - 7);
+  S.anyDay = ymdLocal(d);
+  if (S.showErrors[0]) delete S.showErrors[0].week;
+  saveDraft(); render();
+});
+
+/* Proyectos */
+$("btnAddProj").addEventListener("click", () => {
+  S.projects.push({ name: "", hours: null, kind: null, contribution: "" });
+  S.noProjects = false;
+  if (S.showErrors[1]) delete S.showErrors[1].projNone;
+  saveDraft(); render();
+  const last = $("projList").querySelector(".proj:last-child .input");
+  if (last) last.focus();
+});
+$("btnNoProj").addEventListener("click", () => {
+  S.projects = []; S.noProjects = true;
+  if (S.showErrors[1]) delete S.showErrors[1].projNone;
+  saveDraft(); render();
+});
+$("projList").addEventListener("input", (e) => {
+  const t = e.target;
+  if (!t.dataset.pfield) return;
+  const i = Number(t.dataset.pidx), f = t.dataset.pfield;
+  S.projects[i][f] = (f === "hours") ? (t.value === "" ? null : t.value) : t.value;
+  saveDraft();
+  if (f === "hours") renderReconciliation();
+});
+$("projList").addEventListener("click", (e) => {
+  const del = e.target.closest("[data-del]");
+  if (del) {
+    S.projects.splice(Number(del.dataset.del), 1);
+    if (S.projects.length === 0) S.noProjects = false;
+    saveDraft(); render(); return;
+  }
+  const kind = e.target.closest("[data-pkind]");
+  if (kind) {
+    S.projects[Number(kind.dataset.pidx)].kind = kind.dataset.pkind;
+    saveDraft(); render(); return;
+  }
+  const step = e.target.closest("[data-pstep]");
+  if (step) {
+    const i = Number(step.dataset.pidx);
+    const next = Math.max(0, num(S.projects[i].hours) + Number(step.dataset.pstep));
+    S.projects[i].hours = next === 0 ? null : next;
+    saveDraft(); render();
+  }
+});
+
+/* Horas disponibles */
+$("hoursAvailable").addEventListener("input", (e) => {
+  S.hoursAvailable = e.target.value === "" ? 0 : Number(e.target.value);
+  saveDraft(); renderReconciliation();
+});
+document.querySelectorAll("[data-avail]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    S.hoursAvailable = Math.max(0, num(S.hoursAvailable) + Number(btn.dataset.avail));
+    saveDraft(); renderReconciliation();
+  });
+});
+
+/* Buckets */
+$("recRows").addEventListener("input", (e) => {
+  const key = e.target.dataset.bkey;
+  if (!key) return;
+  S.hours[key] = e.target.value === "" ? null : Number(e.target.value);
+  saveDraft(); renderReconciliation();
+});
+$("recRows").addEventListener("click", (e) => {
+  const step = e.target.closest("[data-bstep]");
+  if (!step) return;
+  const key = step.dataset.bkey;
+  const next = Math.max(0, num(S.hours[key]) + Number(step.dataset.bstep));
+  S.hours[key] = next === 0 ? null : next;
+  saveDraft(); renderReconciliation();
+});
+$("balanceFix").addEventListener("click", () => {
+  const delta = balanceDelta();
+  if (delta < 0) S.hours.other = num(S.hours.other) - delta;
+  else if (delta > 0) S.hoursAvailable = hoursAssigned();
+  saveDraft(); render();
+});
+
+/* Retrabajo */
+$("reworkCause").addEventListener("change", (e) => {
+  S.reworkCause = e.target.value;
+  if (S.showErrors[3]) delete S.showErrors[3].cause;
+  saveDraft(); renderErrors();
+});
+$("reworkDescription").addEventListener("input", (e) => {
+  S.reworkDescription = e.target.value;
+  if (S.showErrors[3] && e.target.value.trim().length >= 20) delete S.showErrors[3].reworkDesc;
+  saveDraft(); renderErrors();
+});
+$("costAmount").addEventListener("input", (e) => { S.costAmount = e.target.value; saveDraft(); });
+$("innovationNotes").addEventListener("input", (e) => { S.innovationNotes = e.target.value; saveDraft(); });
+$("blockers").addEventListener("input", (e) => { S.blockers = e.target.value; saveDraft(); });
+
+/* Envío y cierre */
+$("btnSubmit").addEventListener("click", submit);
+$("btnAnother").addEventListener("click", () => {
+  const keepDesigner = S.designerId;
+  S = blankState();
+  S.designerId = keepDesigner;    // conveniencia: normalmente reporta la misma persona
+  clearDraft(); render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* Historial */
+$("btnHistory").addEventListener("click", openModal);
+$("btnOpenHistory2").addEventListener("click", openModal);
+$("modalClose").addEventListener("click", closeModal);
+$("btnReload").addEventListener("click", loadRecords);
+$("btnCsv").addEventListener("click", async () => {
+  const fb = $("promptFeedback");
+  try {
+    const res = await fetch("/api/export-csv");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const blob = await res.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "Weekly_Pulse_" + ymdLocal(new Date()) + ".csv";
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  } catch (_) {
+    fb.textContent = "No se pudo descargar el CSV del servidor.";
+    setTimeout(() => { fb.textContent = ""; }, 5000);
+  }
+});
+$("btnPrompt").addEventListener("click", copyPrompt);
+
+/* ═══════════════════════════════════════════════════════════
+   ARRANQUE
+   ═══════════════════════════════════════════════════════════ */
+render();
+offerDraft();
+/* Precarga silenciosa para poder avisar de duplicados. */
+loadRecords().catch(() => {});
+</script>
 </body>
 </html>
